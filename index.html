@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../data.js"></script>
+    <script src="../functions.js"></script>
+    <script src="../gui.js"></script>
+
+
+    <script>
+
+        window.onload = function() {
+            run()
+            <!-- console.log("Data " , data); -->
+
+        };
+
+
+
+    </script>
+</head>
+<body class="p-8 px-auto bg-gray-200">
+
+    <div class="flex justify-center">
+    <canvas id="graph" class="border border-red-300"></canvas>
+    </div>
+
+
+
+    <h1>Hello</h1>
+
+
+    <div>
+
+
+        <table class="table-auto w-full">
+            <thead>
+                <tr>
+                    <th>Tube No</th>
+                    <th>Outer Diameter</th>
+                    <th>Thickness</th>
+                    <th>Overlap Length</th>
+
+                </tr>
+            </thead>
+
+            <tbody id="tubes">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <script src="../canvas.js"></script>
+    
+</body>
+</html>
