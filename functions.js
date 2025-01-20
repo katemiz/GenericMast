@@ -96,9 +96,11 @@ function getTubeMasses() {
     data.tubes.forEach((tube) => {
 
         tube.area = Math.PI /4* (Math.pow(tube.od, 2) - Math.pow(tube.od-tube.thickness,2)) ; // mm2
+        tube.inertia = Math.PI /32* (Math.pow(tube.od, 4) - Math.pow(tube.od-tube.thickness,4)) ; // mm4
 
         tube.mass = tube.area*tube.length*tube.density/1000000000;
 
+        tube.ei = tube.E*tube.inertia/10E12;
     }
 
     );

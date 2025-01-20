@@ -12,24 +12,28 @@ let data = {
             "od": 270,
             "thickness": 5,
             "density": 2710,
+            'E':70E9
         },
         {
             "length": 1000,
             "od": 240,
             "thickness": 4,
             "density": 2710,
+            'E':70E9
         },
         {
             "length": 1000,
             "od": 220,
             "thickness": 33,
             "density": 2710,
+            'E':70E9
         },
         {
             "length": 1000,
             "od": 180,
             "thickness": 2,
             "density": 2710,
+            'E':70E9
         }
 
     ],
