@@ -24,7 +24,7 @@ let data = {
         {
             "length": 1000,
             "od": 220,
-            "thickness": 33,
+            "thickness": 3,
             "density": 2710,
             'E':70E9
         },
@@ -50,6 +50,10 @@ let data = {
         },
 
     ],    
+
+
+    "moments":[],
+    "mei":[],
 
 
 }

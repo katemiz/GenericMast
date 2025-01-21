@@ -3,7 +3,7 @@ let x0,y0,sx,sy;
 let smy;
 
 let r1Width,r2Width;
-let r1Height,r2Height;
+let r1Height;
 
 let addx = 60;
 let addy = 40;
@@ -12,7 +12,7 @@ let addy = 40;
 window.addEventListener('resize',() => {
 
     canvas.width = window.innerWidth*0.9;
-    canvas.height = window.innerWidth*0.4;
+    canvas.height = window.innerWidth*0.25;
 
 })
 
@@ -24,7 +24,7 @@ window.addEventListener('load',() => {
     g = canvas.getContext("2d");
     
     canvas.width = window.innerWidth*0.95;
-    canvas.height = window.innerWidth*0.4;
+    canvas.height = window.innerWidth*0.25;
 
     console.log("w",canvas.width);
     console.log("h",canvas.height);
@@ -32,13 +32,13 @@ window.addEventListener('load',() => {
     r1Width = canvas.width
     r2Width = canvas.width
 
-    r1Height = canvas.height*0.3
-    r2Height = canvas.height*0.7
+    r1Height = canvas.height
+    // r2Height = canvas.height*0.7
 
     sx = r1Width/(data.mast.extendedHeight+data.mast.zOffset+2*addx);
     sy = r1Height/(data.tubes[0].od+2*addy);
 
-    smy = (r2Height-addy)/data.mast.rootMoment
+    // smy = (r2Height-addy)/data.mast.rootMoment
 
 
     // x0 = r1Width*0.05;
@@ -86,11 +86,11 @@ function drawBaseRectangles() {
     g.fill();
     g.closePath();
 
-    g.beginPath();
-    g.fillStyle = "LightGreen";
-    g.rect(0,r1Height,r2Width,r2Height);
-    g.fill();
-    g.closePath();
+    // g.beginPath();
+    // g.fillStyle = "LightGreen";
+    // g.rect(0,r1Height,r2Width,r2Height);
+    // g.fill();
+    // g.closePath();
 
     drawTubes();
 }
@@ -173,28 +173,28 @@ function drawTube(tube) {
 
 
     // VERTICAL LINES
-    tube.nodes.forEach((node) =>{
+    // tube.nodes.forEach((node) =>{
 
-        if (node.name === 'D'|| node.name === 'F' ){
+    //     if (node.name === 'D'|| node.name === 'F' ){
 
-            g.beginPath();
-                g.lineWidth = 0.5;
-                g.moveTo((addx+node.z)*sx,r1Height+addy);
-                g.lineTo((addx+node.z)*sx,canvas.height-addy);
-                g.stroke();
-            g.closePath();
+    //         g.beginPath();
+    //             g.lineWidth = 0.5;
+    //             g.moveTo((addx+node.z)*sx,r1Height+addy);
+    //             g.lineTo((addx+node.z)*sx,canvas.height-addy);
+    //             g.stroke();
+    //         g.closePath();
 
-            g.beginPath();
-                g.fillStyle = "Red";
-                g.arc((addx+node.z)*sx, r1Height+addy+node.moment*smy, 5, 0, 2 * Math.PI);
-                g.fill();
-            g.closePath();
+    //         g.beginPath();
+    //             g.fillStyle = "Red";
+    //             g.arc((addx+node.z)*sx, r1Height+addy+node.moment*smy, 5, 0, 2 * Math.PI);
+    //             g.fill();
+    //         g.closePath();
 
-        } 
+    //     } 
 
-    } );
+    // } );
 
-    drawMomentDiagram();
+    //drawMomentDiagram();
 }
 
 
@@ -229,10 +229,13 @@ function drawMomentDiagram() {
 
 function drawM_EIDiagram() {
 
-    let mei =
+    let m_ei;
 
     tube.nodes.forEach((node) =>{
 
+
+        m_ei = node.moment/node.ei;
+        
         if (node.name === 'D'|| node.name === 'F' ){
 
             g.beginPath();

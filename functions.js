@@ -98,14 +98,14 @@ function getTubeMasses() {
         tube.area = Math.PI /4* (Math.pow(tube.od, 2) - Math.pow(tube.od-tube.thickness,2)) ; // mm2
         tube.inertia = Math.PI /32* (Math.pow(tube.od, 4) - Math.pow(tube.od-tube.thickness,4)) ; // mm4
 
-        tube.mass = tube.area*tube.length*tube.density/1000000000;
+        tube.mass = tube.area*tube.length*tube.density/1E9;
 
-        tube.ei = tube.E*tube.inertia/10E12;
+        tube.ei = tube.E*tube.inertia/1E12;
     }
 
     );
 
-    // console.log("Tubes MASS", data.tubes);
+    console.log("Tubes MASS", data.tubes);
 }
 
 
@@ -127,14 +127,31 @@ function getMoments() {
                 }
             });
 
+            let hasNode = false;
+
+            data.moments.forEach((m) =>{
+
+                if (m.h === node.z){
+                    hasNode = true;
+                } 
+            } )
+
+
+            if (!hasNode){
+
+                data.moments.push({"h":node.z,"moment":-node.moment}) 
+            } 
 
             
         })
 
 
-    }
+    },
+
 
     );
+
+
 }
 
 
@@ -171,6 +188,46 @@ function getShearLoads() {
 }
 
 
+function getMEI(){
+
+    data.tubes.forEach((tube, index) => {
+        tube.mei =[] 
+    } ) 
+
+
+    data.tubes.forEach((tube, index) => {
+
+
+        if (index === 0){
+
+            tube.nodes.forEach((point) =>{
+                if (point.name === 'A'|| point.name === 'F'){
+                    tube.mei.push({"h":point.z,"mei":-point.moment/(tube.E*tube.inertia) } )
+                    console.log('larger z',point.z)
+                } 
+    
+            } )
+
+        } else {
+
+
+            tube.nodes.forEach((point) =>{
+                if (point.name === 'C'|| point.name === 'F'){
+                    tube.mei.push({"h":point.z,"mei":-point.moment/(tube.E*tube.inertia) } )
+                    console.log('larger z',point.z)
+                } 
+    
+            } )
+
+        } 
+
+        console.log("MEI",tube.mei)
+
+    } )
+
+} 
+
+
 
 function run() {
 
@@ -179,6 +236,10 @@ function run() {
     getMoments();
     getShearLoads();
 
+    getMEI();
+
     // runCanvas();
     summary();
+
+    drawMDiagram();
 }
