@@ -2,8 +2,6 @@ function summary() {
 
     let tbody = document.getElementById('tubes');
 
-    let rows = [];
-
     data.tubes.forEach( (tube,index) => {
 
         let no = index+1;
@@ -37,11 +35,27 @@ function summary() {
 
         let young = document.createElement('td');
         young.classList.add('text-right')
-        young.innerHTML = tube.E.toFixed(2)
+        young.innerHTML = tube.E/1E9.toFixed(2)
 
         let ei = document.createElement('td');
         ei.classList.add('text-right')
         ei.innerHTML = tube.ei.toFixed(2)
+
+        let mom= document.createElement('td');
+        mom.classList.add('text-right')
+
+        let kkk = tube.mCritical ? tube.mCritical :tube.mBottom
+        mom.innerHTML = 'Bottom :' +tube.mBottom.toFixed(2)+'<br>Critical :'+kkk.toFixed(2)+'<br>Top :'+tube.mTop.toFixed(2)
+
+
+        let mei= document.createElement('td');
+        mei.classList.add('text-right')
+
+        let bbb = 1E6*tube.mBottom/tube.ei
+        let ttt = 1E6*tube.mTop/tube.ei
+        let ccc = tube.mCritical ? 1E6*tube.mCritical/tube.ei :1E6*tube.mBottom/tube.ei
+
+        mei.innerHTML = 'Bottom :' +bbb.toFixed(2)+'<br>Critical :'+ccc.toFixed(2)+'<br>Top :'+ttt.toFixed(2)
 
         rowEl.appendChild(tubeNo)
         rowEl.appendChild(od)
@@ -53,137 +67,11 @@ function summary() {
         rowEl.appendChild(inertia)
         rowEl.appendChild(young)
         rowEl.appendChild(ei)
-
-
+        rowEl.appendChild(mom)
+        rowEl.appendChild(mei)
 
         tbody.appendChild(rowEl)
 
     })
-
-
-
-
-
-
-
-    let p = document.getElementById('nodes');
-
-
-    data.tubes.forEach( (tube,index) => {
-
-
-        let rowEl = document.createElement('tr');
-
-
-        let no = document.createElement('td');
-        no.innerHTML = index+1
-
-        let nodes = document.createElement('td');
-
-        let t = document.createElement('table');
-
-        nodes.appendChild(t)
-
-
-
-        tube.nodes.forEach((node) =>{
-
-
-            let tr = document.createElement('tr');
-
-            let td1 = document.createElement('td');
-            let td2 = document.createElement('td');
-            let td3= document.createElement('td');
-            let td4 = document.createElement('td');
-            let td5 = document.createElement('td');
-            let td6 = document.createElement('td');
-
-            
-
-
-
-
-
-        } )
-
-        let position = document.createElement('td');
-        position.innerHTML = node.z
-
-        let m = document.createElement('td');
-        m.innerHTML = node.moment
-
-
-
-
-        rowEl.appendChild(no)
-        rowEl.appendChild(position)
-        rowEl.appendChild(m)
-
-
-
-        p.appendChild(rowEl)
-
-    })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    let parent = document.getElementById('moments');
-
-
-    data.moments.forEach( (moment,index) => {
-
-
-        let rowEl = document.createElement('tr');
-
-
-        let no = document.createElement('td');
-        no.innerHTML = index+1
-
-        let position = document.createElement('td');
-        position.innerHTML = moment.h
-
-        let m = document.createElement('td');
-        m.innerHTML = moment.moment
-
-
-
-
-        rowEl.appendChild(no)
-        rowEl.appendChild(position)
-        rowEl.appendChild(m)
-
-
-
-        parent.appendChild(rowEl)
-
-    })
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

@@ -1,8 +1,8 @@
 let data = {
 
 
-    "mast": {
-        "horizontalLoad":500,
+    "sys": {
+        "horLoad":500,
         "zOffset": 300,
     },
 

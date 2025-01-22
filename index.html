@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
+    <link rel="icon" type="image/x-icon" href="https://masttech.net/images/favicon.ico">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../data.js"></script>
     <script src="../functions.js"></script>
@@ -30,9 +32,9 @@
 </head>
 <body class="p-8 px-auto bg-gray-200">
 
-    <div class="flex justify-center">
+    <!-- <div class="flex justify-center">
         <canvas id="graph" class="border border-red-300"></canvas>
-    </div>
+    </div> -->
 
     <div div class="bg-slate-300 my-4">
         <canvas id="myChart"></canvas>
@@ -51,8 +53,10 @@
                 <th class="text-right">Area (mm2)</th>
                 <th class="text-right">Mass (kg)</th>
                 <th class="text-right">Inertia (mm4)</th>
-                <th class="text-right">E, Young's Modulus (Pa)</th>
+                <th class="text-right">E, (GPa)</th>
                 <th class="text-right">EI, (Nm2)</th>
+                <th class="text-right">M, (Nm)</th>
+
 
             </tr>
         </thead>
@@ -66,23 +70,6 @@
 
 
 
-    <div div class="bg-pink-300 my-4">
-
-        <table class="table-auto w-full">
-        <thead>
-            <tr>
-                <th class="text-left">No</th>
-                <th class="text-left">Height (mm)</th>
-                <th class="text-left">Moment (Nm)</th>
-                <th class="text-left">M/EI</th>
-            </tr>
-        </thead>
-
-        <tbody id="nodes">
-
-        </tbody>
-        </table>
-    </div>
 
 
 
@@ -90,26 +77,9 @@
 
 
 
-    <div div class="bg-pink-300 my-4">
-
-        <table class="table-auto w-full">
-        <thead>
-            <tr>
-                <th class="text-left">No</th>
-                <th class="text-left">Height (mm)</th>
-                <th class="text-left">Moment (Nm)</th>
-                <th class="text-left">M/EI</th>
-            </tr>
-        </thead>
-
-        <tbody id="moments">
-
-        </tbody>
-        </table>
-    </div>
 
 
-    <script src="../canvas.js"></script>
+    <!-- <script src="../canvas.js"></script> -->
     <script src="../charts.js"></script>
 
 

@@ -2,21 +2,22 @@
 function drawMDiagram(){
 
 
-    let veri = data.moments
+    let veri = data.tubes
 
-    console.log(veri)
+    // console.log(veri)
     
-    console.log(veri.map(row => row.h))
-    console.log(veri.map(row => row.moment))
+    // console.log(veri.map(row => row.zTop))
+    // console.log(veri.map(row => row.moment))
 
     let dsets = [
-        {
-            label: 'M',
-            data: veri.map(row => row.moment),
-            yAxisID: 'y',
-
-        },
-    ] 
+      {
+       label:"Bending Moment",
+       data:data.sys.momentData,
+       parsing:{
+         yAxisKey:'y'
+       }
+      } 
+     ]
 
 
     data.tubes.forEach((tube,index) =>{
@@ -25,8 +26,12 @@ function drawMDiagram(){
         dsets.push(
            {
                 label:'T'+index,
-                data:tube.mei,
-                yAxisId:'y1'
+                data:tube.meiData,
+                yAxisId:'y1',
+                parsing:{
+                  yAxisKey:'y'
+                },
+                fill:true
            } 
         )
     } )
@@ -40,8 +45,8 @@ function drawMDiagram(){
         {
             type: 'line',
             data: {
-                labels: veri.map(row => row.h),
-                datasets: dsets,
+                labels: data.sys.zArray,
+                datasets:dsets ,
             },
 
             options: {

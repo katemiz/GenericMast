@@ -231,15 +231,214 @@ function getMEI(){
 
 function run() {
 
-    getZPositions();
-    getTubeMasses();
-    getMoments();
-    getShearLoads();
+    // getZPositions();
+    // getTubeMasses();
+    // getMoments();
+    // getShearLoads();
 
-    getMEI();
+    // getMEI();
 
     // runCanvas();
-    summary();
+    // summary();
+
+    // drawMDiagram();
+
+    getTubeProps();
+}
+
+
+
+function getTubeProps() {
+
+
+    let z = 0;
+
+
+    data.tubes.forEach((tube, index) => {
+
+        tube.zBottom = z;
+
+        z = z + tube.length;
+
+        tube.zTop = z;
+
+        if (data.overlaps[index]){
+            z = z - data.overlaps[index].length 
+        } 
+
+        getArea(tube)
+        getInertia(tube)
+        getMass(tube)
+        getEI(tube)
+    }); 
+
+
+
+
+
+    data.tubes.forEach((tube,index) => {
+
+        if (index < 1){
+            tube.zCritical = false
+        } else {
+            tube.zCritical = data.tubes[index-1].zTop 
+
+            console.log(tube.zCritical)
+        } 
+    } )
+
+
+
+
+    data.sys.extendedHeight = z;
+    data.sys.totalHeight = z+data.sys.zOffset;
+
+
+    getRootMoment();
+    getTubeMoments();
+
+    orderHeightValues();
 
     drawMDiagram();
-}
+
+
+
+    console.log(data.tubes)
+    // console.log(data.sys)
+
+    summary();
+
+
+
+} 
+
+
+function getArea(tube) {
+
+    tube.area = Math.PI /4* (Math.pow(tube.od, 2) - Math.pow(tube.od-tube.thickness,2)) ; // mm2
+
+} 
+
+function getInertia(tube) {
+    tube.inertia = Math.PI /32* (Math.pow(tube.od, 4) - Math.pow(tube.od-tube.thickness,4)) ; // mm4
+} 
+
+
+function getMass(tube) {
+    tube.mass = tube.area*tube.length*tube.density/1E9; // k
+} 
+
+
+
+function getEI(tube) {
+    tube.ei = tube.E*tube.inertia/1E12; // 1/m
+} 
+
+function getRootMoment() {
+    data.sys.mRoot = data.sys.horLoad*data.sys.totalHeight/1000; // Nm
+} 
+
+
+function getTubeMoments(){
+
+    data.tubes.forEach((tube,index) => {
+
+        tube.mBottom = data.sys.mRoot*tube.zBottom/data.sys.totalHeight-data.sys.mRoot;
+        tube.mTop = data.sys.mRoot*tube.zTop/data.sys.totalHeight-data.sys.mRoot;
+
+        tube.meiBottom = tube.mBottom/tube.ei;
+        tube.meiTop = tube.mTop/tube.ei;
+
+        if (index > 0){
+            tube.mCritical = data.sys.mRoot*tube.zCritical/data.sys.totalHeight-data.sys.mRoot;
+            tube.meiCritical = tube.mCritical/tube.ei;
+    
+        } else{
+            tube.mCritical = false;
+            tube.meiCritical = false;
+        } 
+    }) 
+} 
+
+
+
+function orderHeightValues(){
+
+    data.sys.momentData =[
+       {
+        "x":0,
+        "y":-data.sys.mRoot
+       } 
+    ] 
+
+    data.tubes.forEach((tube) => {
+
+        tube.meiData =[] 
+
+        data.sys.momentData.push(
+
+           {
+            "x":tube.zTop,
+            "y":tube.mTop
+           } 
+        )
+
+        tube.meiData.push(
+           {
+            "x":tube.zCritical ? tube.zCritical:tube.zBottom,
+            "y":tube.meiCritical ? 1E6*tube.meiCritical : 1E6*tube.meiBottom
+           },
+
+           {
+            "x":tube.zTop,
+            "y":1E6*tube.meiTop
+           },
+        )
+
+    }) 
+} 
+
+
+
+
+function findMEIArea(){
+
+    let meiI,meiII, minMEI
+    let zI,zII
+    
+    let areaSq,areaTri, areaMEI
+
+
+    data.tubes.forEach((tube) => {
+
+        meiI = tube.meiCritical ? tube.meiCritical : tube.meiBottom
+        meiII = tube.meiTop
+
+        zI = tube.zCritical ? tube.zCritical : tube.zBottom
+        zII = tube.zTop
+
+        minMEI = meiI > meiII ? meiII : meiI
+
+        areaSq = Math.abs((zI-zII)*minMEI)
+        areaTri = Math.abs((zI-zII)*(meiI-meiII)/2)
+
+
+        areaMEI = (meiI+meiII)*(zII-zI)/2;
+
+
+
+
+    } )
+
+
+
+
+
+
+
+} 
+
+
+
+
+

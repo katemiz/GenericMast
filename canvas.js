@@ -17,43 +17,43 @@ window.addEventListener('resize',() => {
 })
 
 
-window.addEventListener('load',() => {
+// window.addEventListener('load',() => {
 
-    canvas = document.getElementById("graph");
+//     canvas = document.getElementById("graph");
 
-    g = canvas.getContext("2d");
+//     g = canvas.getContext("2d");
     
-    canvas.width = window.innerWidth*0.95;
-    canvas.height = window.innerWidth*0.25;
+//     canvas.width = window.innerWidth*0.95;
+//     canvas.height = window.innerWidth*0.25;
 
-    console.log("w",canvas.width);
-    console.log("h",canvas.height);
+//     console.log("w",canvas.width);
+//     console.log("h",canvas.height);
 
-    r1Width = canvas.width
-    r2Width = canvas.width
+//     r1Width = canvas.width
+//     r2Width = canvas.width
 
-    r1Height = canvas.height
-    // r2Height = canvas.height*0.7
+//     r1Height = canvas.height
+//     // r2Height = canvas.height*0.7
 
-    sx = r1Width/(data.mast.extendedHeight+data.mast.zOffset+2*addx);
-    sy = r1Height/(data.tubes[0].od+2*addy);
+//     sx = r1Width/(data.mast.extendedHeight+data.mast.zOffset+2*addx);
+//     sy = r1Height/(data.tubes[0].od+2*addy);
 
-    // smy = (r2Height-addy)/data.mast.rootMoment
-
-
-    // x0 = r1Width*0.05;
-    // y0 = r1Height*0.5;
+//     // smy = (r2Height-addy)/data.mast.rootMoment
 
 
+//     // x0 = r1Width*0.05;
+//     // y0 = r1Height*0.5;
 
-    // console.log(data.mast.extendedHeight);
-    // console.log("x0",x0);
-    // console.log("y0",y0);
-    console.log("sx",sx);
-    console.log("sy",sy);
 
-    drawBaseRectangles();
-});
+
+//     // console.log(data.mast.extendedHeight);
+//     // console.log("x0",x0);
+//     // console.log("y0",y0);
+//     console.log("sx",sx);
+//     console.log("sy",sy);
+
+//     drawBaseRectangles();
+// });
 
 
 
