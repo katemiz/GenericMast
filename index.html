@@ -7,7 +7,10 @@
 
     <link rel="icon" type="image/x-icon" href="https://masttech.net/images/favicon.ico">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+
     <script src="../data.js"></script>
     <script src="../functions.js"></script>
     <script src="../gui.js"></script>
@@ -30,32 +33,35 @@
 
 
 </head>
-<body class="p-8 px-auto bg-gray-200">
+<body class="container">
 
     <!-- <div class="flex justify-center">
         <canvas id="graph" class="border border-red-300"></canvas>
     </div> -->
+
+    <h1 class="title is-size-1 has-text-centered">Telescopic Mast Bending Paramaters</h1>
 
     <div div class="bg-slate-300 my-4">
         <canvas id="myChart"></canvas>
     </div>
 
 
-    <div div class="bg-pink-300 my-4">
+    <div div class="">
 
-        <table class="table-auto w-full">
+        <table class="table">
         <thead>
             <tr>
-                <th class="text-left">Tube No</th>
-                <th class="text-left">OD</th>
-                <th class="text-left">Thk</th>
-                <th class="text-left">Length</th>
-                <th class="text-right">Area (mm2)</th>
-                <th class="text-right">Mass (kg)</th>
-                <th class="text-right">Inertia (mm4)</th>
-                <th class="text-right">E, (GPa)</th>
-                <th class="text-right">EI, (Nm2)</th>
-                <th class="text-right">M, (Nm)</th>
+                <th class="has-text-centered">No</th>
+                <th class="has-text-right">OD<br>mm</th>
+                <th class="text-left">Thk<br>mm</th>
+                <th class="text-left">Length<br>mm</th>
+                <th class="text-right">Area<br>mm<sup>2</sup></th>
+                <th class="text-right">Mass<br>kg</th>
+                <th class="text-right">I<br>mm<sup>4</sup></th>
+                <th class="text-right">E<br>MPa</th>
+                <th class="text-right">EI<br>Nmm<sup>2</sup></th>
+                <th class="text-right">M<br>Nm</th>
+                <th class="text-right">M/EI<br>m<sup>-1</sup></th>
 
 
             </tr>

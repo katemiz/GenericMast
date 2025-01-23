@@ -190,7 +190,7 @@ function getShearLoads() {
 
 function getMEI(){
 
-    data.tubes.forEach((tube, index) => {
+    data.tubes.forEach((tube) => {
         tube.mei =[] 
     } ) 
 
@@ -205,7 +205,6 @@ function getMEI(){
                     tube.mei.push({"h":point.z,"mei":-point.moment/(tube.E*tube.inertia) } )
                     console.log('larger z',point.z)
                 } 
-    
             } )
 
         } else {
@@ -216,7 +215,6 @@ function getMEI(){
                     tube.mei.push({"h":point.z,"mei":-point.moment/(tube.E*tube.inertia) } )
                     console.log('larger z',point.z)
                 } 
-    
             } )
 
         } 
@@ -301,6 +299,8 @@ function getTubeProps() {
 
     drawMDiagram();
 
+    findMEIArea();
+
 
 
     console.log(data.tubes)
@@ -315,12 +315,12 @@ function getTubeProps() {
 
 function getArea(tube) {
 
-    tube.area = Math.PI /4* (Math.pow(tube.od, 2) - Math.pow(tube.od-tube.thickness,2)) ; // mm2
+    tube.area = Math.PI /4* (Math.pow(tube.od, 2) - Math.pow(tube.od-2*tube.thickness,2)) ; // mm2
 
 } 
 
 function getInertia(tube) {
-    tube.inertia = Math.PI /32* (Math.pow(tube.od, 4) - Math.pow(tube.od-tube.thickness,4)) ; // mm4
+    tube.inertia = Math.PI /32* (Math.pow(tube.od, 4) - Math.pow(tube.od-2*tube.thickness,4)) ; // mm4
 } 
 
 
@@ -331,7 +331,7 @@ function getMass(tube) {
 
 
 function getEI(tube) {
-    tube.ei = tube.E*tube.inertia/1E12; // 1/m
+    tube.ei = tube.E*tube.inertia; // Nmm2
 } 
 
 function getRootMoment() {
@@ -346,17 +346,21 @@ function getTubeMoments(){
         tube.mBottom = data.sys.mRoot*tube.zBottom/data.sys.totalHeight-data.sys.mRoot;
         tube.mTop = data.sys.mRoot*tube.zTop/data.sys.totalHeight-data.sys.mRoot;
 
-        tube.meiBottom = tube.mBottom/tube.ei;
-        tube.meiTop = tube.mTop/tube.ei;
+        tube.meiBottom = 1000*tube.mBottom/tube.ei;
+        tube.meiTop = 1000*tube.mTop/tube.ei;
 
         if (index > 0){
             tube.mCritical = data.sys.mRoot*tube.zCritical/data.sys.totalHeight-data.sys.mRoot;
             tube.meiCritical = tube.mCritical/tube.ei;
-    
+
         } else{
             tube.mCritical = false;
             tube.meiCritical = false;
         } 
+
+        // console.log("tube.meiBottom",tube.meiBottom)
+        // console.log("tube.meiTop",tube.meiTop)
+
     }) 
 } 
 
@@ -383,18 +387,24 @@ function orderHeightValues(){
            } 
         )
 
+
+        let bottom_mei = tube.meiCritical ? tube.meiCritical : tube.meiBottom;
+
+        console.log("BOTTOM MEI",bottom_mei)
+
         tube.meiData.push(
            {
             "x":tube.zCritical ? tube.zCritical:tube.zBottom,
-            "y":tube.meiCritical ? 1E6*tube.meiCritical : 1E6*tube.meiBottom
+            "y":1E9*bottom_mei
            },
 
            {
             "x":tube.zTop,
-            "y":1E6*tube.meiTop
+            "y":1E9*tube.meiTop
            },
         )
 
+        console.log("MEI", tube.meiData)
     }) 
 } 
 
@@ -403,27 +413,30 @@ function orderHeightValues(){
 
 function findMEIArea(){
 
-    let meiI,meiII, minMEI
-    let zI,zII
-    
-    let areaSq,areaTri, areaMEI
+
+    let deflection = 0
 
 
     data.tubes.forEach((tube) => {
 
-        meiI = tube.meiCritical ? tube.meiCritical : tube.meiBottom
-        meiII = tube.meiTop
 
-        zI = tube.zCritical ? tube.zCritical : tube.zBottom
-        zII = tube.zTop
-
-        minMEI = meiI > meiII ? meiII : meiI
-
-        areaSq = Math.abs((zI-zII)*minMEI)
-        areaTri = Math.abs((zI-zII)*(meiI-meiII)/2)
+        let xbar = findTrapezoidAreaAndCentroid(tube)
 
 
-        areaMEI = (meiI+meiII)*(zII-zI)/2;
+
+        let xbar_right = data.sys.extendedHeight-tube.zTop+xbar
+
+
+
+        deflection = deflection+tube.areaMEI*xbar_right
+
+        console.log("xbar",xbar)
+
+        console.log("xbar_right",xbar_right)
+        console.log("deflection",deflection)
+
+
+
 
 
 
@@ -436,9 +449,68 @@ function findMEIArea(){
 
 
 
+
+
+
+
+
 } 
 
 
 
 
 
+function findTrapezoidAreaAndCentroid(tube) {
+
+    let x1 = tube.zCritical ? tube.zCritical : tube.zBottom
+    let x2 = tube.zTop
+
+    let v1 = tube.meiCritical ? tube.meiCritical : tube.meiBottom
+    let v2 = tube.meiTop
+
+    x1 = Math.abs(x1)
+    x2 = Math.abs(x2)
+    v1 = Math.abs(v1)
+    v2 = Math.abs(v2)
+
+    let xdist = Math.abs(x1-x2)
+    let vdifference = v1-v2
+
+    // console.log('v1',v1)
+    // console.log('v2',v2)
+
+
+    // console.log('x1',x1)
+    // console.log('x2',x2)
+
+    let areaTotal = (v1+v2)*xdist/2
+
+    // Total area under M/EI diagram
+    tube.areaMEI = areaTotal
+
+    let minV = v1 > v2 ? v2 : v1
+
+    // console.log('minV',minV)
+
+
+    let areaSq = minV*xdist
+    let areaTri = 0.5*xdist*Math.abs(vdifference)
+
+    // console.log('areaSq',areaSq)
+    // console.log('areaTri',areaTri)
+
+    // x bar calculation
+    let xbar
+
+    if (vdifference > 0) {
+
+        // console.log('aaaa')
+        xbar = (areaSq*xdist*0.5+2*areaTri*xdist/3)/areaTotal
+    } else {
+        // console.log('bbbb')
+
+        xbar = (areaSq*xdist*0.5+areaTri*xdist/3)/areaTotal
+    } 
+
+    return xbar;
+} 

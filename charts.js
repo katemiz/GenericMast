@@ -23,17 +23,19 @@ function drawMDiagram(){
     data.tubes.forEach((tube,index) =>{
 
 
-        dsets.push(
-           {
-                label:'T'+index,
-                data:tube.meiData,
-                yAxisId:'y1',
-                parsing:{
-                  yAxisKey:'y'
-                },
-                fill:true
-           } 
-        )
+      dsets.push(
+          {
+            label:'T'+index,
+            data:tube.meiData,
+            yAxisId:'y1',
+            parsing:{
+              yAxisKey:'y'
+            },
+            fill:true
+          } 
+      )
+
+
     } )
     
 
@@ -86,13 +88,14 @@ function drawMDiagram(){
 
                         title: {
                             display: true,
-                            text: 'M/EI, 1/m 10E-5'
+                            text: 'M/EI, 1/m [x 1E-9] '
                         },
 
                         grid:{
                             drawOnChartArea: false,
 
                         },
+
 
                         // suggestedMin: 3, // Adjust as needed
                         // suggestedMax: 10 // Adjust as needed
