@@ -227,7 +227,7 @@ function getMEI(){
 
 
 
-function run() {
+function runCalculations() {
 
     // getZPositions();
     // getTubeMasses();
@@ -241,7 +241,26 @@ function run() {
 
     // drawMDiagram();
 
+    renderModalContent(15)
+
     getTubeProps();
+}
+
+
+
+
+
+
+
+function runInputTable() {
+
+
+    let noOfSections = document.getElementById('noOfSections').value;
+    console.log("noOfSections",noOfSections)
+
+    renderModalContent(noOfSections)
+
+
 }
 
 

@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
 
     <script src="../data.js"></script>
+    <script src="../modal.js"></script>
     <script src="../functions.js"></script>
     <script src="../gui.js"></script>
 
@@ -19,10 +20,16 @@
     <script>
 
         window.onload = function() {
-            run()
-            <!-- console.log("Data " , data); -->
 
+            renderModalContent(noOfSections)
+
+
+            //runCalculations()
         };
+
+        function refreshCalcs() {
+            toggleModal()
+        }
 
     </script>
 
@@ -41,43 +48,23 @@
 
     <h1 class="title is-size-1 has-text-centered">Telescopic Mast Bending Paramaters</h1>
 
+
+    <button class="button" onclick="toggleModal()">Edit Parameters</button>
+
     <div div class="bg-slate-300 my-4">
         <canvas id="myChart"></canvas>
     </div>
 
 
-    <div div class="">
-
-        <table class="table">
-        <thead>
-            <tr>
-                <th class="has-text-centered">No</th>
-                <th class="has-text-right">OD<br>mm</th>
-                <th class="text-left">Thk<br>mm</th>
-                <th class="text-left">Length<br>mm</th>
-                <th class="text-right">Area<br>mm<sup>2</sup></th>
-                <th class="text-right">Mass<br>kg</th>
-                <th class="text-right">I<br>mm<sup>4</sup></th>
-                <th class="text-right">E<br>MPa</th>
-                <th class="text-right">EI<br>Nmm<sup>2</sup></th>
-                <th class="text-right">M<br>Nm</th>
-                <th class="text-right">M/EI<br>m<sup>-1</sup></th>
-
-
-            </tr>
-        </thead>
-
-        <tbody id="tubes">
-
-        </tbody>
-        </table>
+    <div div class="propsTable">
+        <!-- propsTable.js -->
+        <!-- Content Populated by propsTable() -->
     </div>
 
-
-
-
-
-
+    <div class="modal" id="paramsModal">
+        <!-- modal.js -->
+        <!-- Content Populated by runInputTable() -->
+    </div>
 
 
 
