@@ -3,24 +3,24 @@ let data = {
 
     "sys": {
         "horLoad":500,
-        "zOffset": 300,
+        "zOffset": 0,
     },
 
     "tubes": [
         {
-            "length": 1000,
+            "length": 1800,
             "od": 270,
             "thickness": 5,
             "density": 2710,
             'E':70E3
         },
-        {
-            "length": 1000,
-            "od": 240,
-            "thickness": 4,
-            "density": 2710,
-            'E':70E3
-        },
+        // {
+        //     "length": 1000,
+        //     "od": 240,
+        //     "thickness": 4,
+        //     "density": 2710,
+        //     'E':70E3
+        // },
         // {
         //     "length": 1000,
         //     "od": 220,
@@ -39,9 +39,9 @@ let data = {
     ],
 
     "overlaps": [
-        {
-            "length": 200,
-        },
+        // {
+        //     "length": 200,
+        // },
         // {
         //     "length": 200,
         // },

@@ -351,7 +351,7 @@ function getTubeMoments(){
 
         if (index > 0){
             tube.mCritical = data.sys.mRoot*tube.zCritical/data.sys.totalHeight-data.sys.mRoot;
-            tube.meiCritical = tube.mCritical/tube.ei;
+            tube.meiCritical = 1000*tube.mCritical/tube.ei;
 
         } else{
             tube.mCritical = false;
@@ -415,24 +415,45 @@ function findMEIArea(){
 
 
     let deflection = 0
+    let xbar_rh;
+    let z;
+
+    data.sys.deflection = [{"x":0,"y":0} ] 
 
 
-    data.tubes.forEach((tube) => {
+    data.tubes.forEach((tube,index) => {
 
 
-        let xbar = findTrapezoidAreaAndCentroid(tube)
+        // xbar is centroid from L/H side
+        let xbar_lh = findTrapezoidAreaAndCentroid(tube)
+
+        if (index < 1){
+
+            xbar_rh = data.sys.extendedHeight-xbar_lh
+
+            z = tube.zTop
+
+        } else {
+            xbar_rh = data.sys.extendedHeight-(tube.zCritical+xbar_lh)
+
+            z = tube.zCritical
+
+
+        } 
 
 
 
-        let xbar_right = data.sys.extendedHeight-tube.zTop+xbar
 
+        deflection = deflection+tube.areaMEI*xbar_rh
 
+        data.sys.deflection.push({
+            "x":z,
+            "y":deflection
+        } )
 
-        deflection = deflection+tube.areaMEI*xbar_right
+        console.log("xbar",xbar_lh)
 
-        console.log("xbar",xbar)
-
-        console.log("xbar_right",xbar_right)
+        console.log("xbar_right",xbar_rh)
         console.log("deflection",deflection)
 
 
@@ -505,11 +526,11 @@ function findTrapezoidAreaAndCentroid(tube) {
     if (vdifference > 0) {
 
         // console.log('aaaa')
-        xbar = (areaSq*xdist*0.5+2*areaTri*xdist/3)/areaTotal
+        xbar = (areaSq*xdist*0.5+areaTri*xdist/3)/areaTotal
     } else {
         // console.log('bbbb')
 
-        xbar = (areaSq*xdist*0.5+areaTri*xdist/3)/areaTotal
+        xbar = (areaSq*xdist*0.5+2*areaTri*xdist/3)/areaTotal
     } 
 
     return xbar;

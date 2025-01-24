@@ -37,6 +37,21 @@ function drawMDiagram(){
 
 
     } )
+
+
+    dsets.push(
+      {
+        label:'Deflection',
+        data:data.sys.deflection,
+        yAxisId:'y2',
+        parsing:{
+          yAxisKey:'y'
+        },
+        fill:true
+      } 
+  )
+
+
     
 
     console.log(dsets)
@@ -99,10 +114,32 @@ function drawMDiagram(){
 
                         // suggestedMin: 3, // Adjust as needed
                         // suggestedMax: 10 // Adjust as needed
+                      } ,
 
 
+                      y2:{
+                        type:'linear',
+                        display:true,
+                        position:'right',
 
+                        title: {
+                            display: true,
+                            text: 'mm'
+                        },
+
+                        grid:{
+                            drawOnChartArea: false,
+
+                        },
+
+
+                        // suggestedMin: 3, // Adjust as needed
+                        // suggestedMax: 10 // Adjust as needed
                       } 
+
+
+
+
                 }
               },
 
