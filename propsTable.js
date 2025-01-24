@@ -1,35 +1,40 @@
+function runInputTable() {
 
+    let tableDiv = document.getElementById("propsTable")
 
+    // TABLE
+    let t = document.createElement('table')
+    let thead = document.createElement('thead')
+    let tr = document.createElement('tr')
 
+    let tbody = document.createElement('tbody')
+    tbody.id='tubes'
 
+    let thData = [
+        'No',
+        'OD<br>mm',
+        'Thk<br>mm',
+        'Length<br>mm',
+        'Area<br>mm<sup>2</sup>',
+        'Mass<br>kg',
+        'I<br>mm<sup>4</sup>',
+        'E<br>MPa',
+        'EI<br>Nmm<sup>2</sup>',
+        'M<br>Nm',
+        'M/EI<br>m<sup>-1</sup>'
+    ];
 
+    for (let index = 0; index < thData.length; index++) {
+        let th = document.createElement('th')
+        th.innerHTML = thData[index]
 
+        tr.appendChild(th)
+    }
 
+    thead.appendChild(tr)
 
+    t.appendChild(thead)
+    t.appendChild(tbody)
 
-
-
-
-<table class="table">
-<thead>
-    <tr>
-        <th class="has-text-centered">No</th>
-        <th class="has-text-right">OD<br>mm</th>
-        <th class="text-left">Thk<br>mm</th>
-        <th class="text-left">Length<br>mm</th>
-        <th class="text-right">Area<br>mm<sup>2</sup></th>
-        <th class="text-right">Mass<br>kg</th>
-        <th class="text-right">I<br>mm<sup>4</sup></th>
-        <th class="text-right">E<br>MPa</th>
-        <th class="text-right">EI<br>Nmm<sup>2</sup></th>
-        <th class="text-right">M<br>Nm</th>
-        <th class="text-right">M/EI<br>m<sup>-1</sup></th>
-
-
-    </tr>
-</thead>
-
-<tbody id="tubes">
-
-</tbody>
-</table>
+    tableDiv.appendChild(t)
+}
