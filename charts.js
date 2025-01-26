@@ -2,12 +2,6 @@
 function drawMDiagram(){
 
 
-    let veri = data.tubes
-
-    // console.log(veri)
-    
-    // console.log(veri.map(row => row.zTop))
-    // console.log(veri.map(row => row.moment))
 
     let dsets = [
       {

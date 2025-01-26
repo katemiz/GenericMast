@@ -1,10 +1,11 @@
-let showModal = false
-let noOfSections = 15
 
+let showModal = false
+let maxNoOfSections = 15
+let noOfSections = maxNoOfSections;
 
 function toggleModal () {
 
-    let m = document.getElementById('paramsModal')
+    let m = document.getElementById('modal')
 
     if (showModal) {
         m.classList.remove('is-active')
@@ -20,164 +21,266 @@ function toggleModal () {
 
 
 
+function renderModalContent() {
 
-
-
-function renderModalContent(noOfSections) {
+    console.log("Running function :",arguments.callee.name);
 
     /*
-    Modal
-    |---- Background
-    |---- Card
-        |---- Header
-        |---- Section
-        |---- Footer
-
+        Modal
+        |---- Background
+        |---- Card
+            |---- Header
+            |---- Section
+            |---- Footer
     */
 
-    let m = document.getElementById('paramsModal');
-
-    // MODAL BACKGROUND
-    let mb = document.createElement('div')
-    mb.classList.add('modal-background')
-    mb.addEventListener('click',toggleModal)
-    m.appendChild(mb)
-
-    // MODAL CARD
-    let mc = document.createElement('div')
-    mc.classList.add('modal-card')
-
-    // MODAL HEADER
-    let mh = document.createElement('header')
-    mh.classList.add('modal-card-head')
-
-    let mh_p = document.createElement('p')
-    mh_p.classList.add('modal-card-title')
-    mh_p.innerHTML = 'Mast Dimensions and Parameters'
-
-    let mh_b = document.createElement('buttom')
-    mh_b.classList.add('delete')
-    mh_b.innerHTML = 'Mast Dimensions and Parameters'
-
-    mh.appendChild(mh_p)
-    mh.appendChild(mh_b)
-    mc.appendChild(mh)
 
     // SECTION
-    let ms = document.createElement('section')
-    ms.classList.add('modal-card-bod')
+    renderAllTubeCards()
 
-    mc.appendChild(ms)
-
-    for (let index = 1; index < noOfSections; index++) {
-        let tubeCard = addField(index)
-        mc.appendChild(tubeCard)
-    }
-
-    // FOOTER
-    let mf_b1 = document.createElement('button')
-    mf_b1.classList.add('button', 'is-success')
-    mf_b1.innerHTML = 'Save Changes'
-    mf_b1.addEventListener('click',refreshCalcs)
-
-    let mf_b2 = document.createElement('button')
-    mf_b2.classList.add('button', 'is-success')
-    mf_b2.innerHTML = 'Cancel'
-    mf_b2.addEventListener('click',toggleModal)
-
-    let mf_bs = document.createElement('div')
-    mb.classList.add('buttons')
-
-    mf_bs.appendChild(mf_b1)
-    mf_bs.appendChild(mf_b2)
-
-    let mf_f = document.createElement('footer')
-    mf_f.classList.add('modal-card-foot')
-
-    mf_f.appendChild(mf_bs)
-
-    // MODAL
-    m.appendChild(mb)   // Background
-    m.appendChild(mc)   // Card -> Header - Section - Footer
 }
 
 
-function addField(index) {
+
+
+
+function textFields(id,labelText,infoText,placeholder) {
+
+    /*
+        <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="Text input">
+        </div>
+        <p class="help is-size-7">Info</p>
+        </div>
+    */
 
 
     let p1 = document.createElement('p')
-    p1.classList.add('title','is-4')
-    p1.innerHTML = 'Section Tube'+index
+    p1.classList.add('help','is-size-7')
+    p1.innerHTML = infoText
 
-    let divMc = document.createElement('div')
-    divMc.classList.add('media-content')
+    let input = document.createElement('input')
+    input.type = 'text'
+    input.classList.add('input','is-small')
+    input.innerHTML = placeholder
 
-    let divM = document.createElement('div')
-    divM.classList.add('media')
+    let control = document.createElement('div')
 
-    divMc.appendChild(p1)
-    divM.appendChild(divMc)
-
-    let divC = document.createElement('div')
-    divC.classList.add('card')
-
-    divC.appendChild(divMc)
-
-    return divC
-}
-
-
-
-
-
-
-
-function parametersButton() {
-
-    let horField = document.createElement('div')
-    horField.classList.add('field','is-horizontal')
-
-    let fieldLabel = document.createElement('div')
-    fieldLabel.classList.add('field-label','is-normal')
 
     let label = document.createElement('label')
-    label.classList.add('label')
-    label.innerHTML = 'Number of Sections/Tubes?'
-
-    let fieldBody = document.createElement('div')
-    fieldBody.classList.add('field-body')
+    label.innerHTML = labelText
 
     let field = document.createElement('div')
     field.classList.add('field')
 
-    let pcontrol = document.createElement('p')
-    pcontrol.classList.add('control')
+    field.appendChild(label)
+    field.appendChild(control)
+    control.appendChild(input)
+    field.appendChild(p1)
 
-    let selSpan = document.createElement('span')
-    selSpan.classList.add('select')
+    return field
+}
 
-    let selectEL = document.getElementById("select");
 
-    for (let index = 1; index < noOfSections; index++) {
+
+function renderAllTubeCards() {   
+
+    console.log("Running function :",arguments.callee.name);
+
+    for (let index = 1; index <= noOfSections; index++) {
+        addOneTubeCard(index)
+    }
+}
+
+
+
+
+
+
+function addOneTubeCard(index) {
+
+    console.log("Running function :",arguments.callee.name);
+
+    /*
+    <div class="columns">
+
+        <div class="column is-1 is-size-2 has-text-weight-bold">S1</div>
+
+        <div class="column">
+            <div class="columns">
+                <div class="column is-4">OD</div>
+                <div class="column is-4">THK</div>
+                <div class="column is-4">Length</div>
+            </div>
+
+            <div class="columns">
+                <div class="column is-8">Material</div>
+                <div class="column">Overlap</div>
+            </div>
+        </div>
+    </div>
+    */
+
+    let divGrid = document.createElement('div')
+    divGrid.id = 'tubeGrid'+index
+    divGrid.classList.add('grid','my-4','has-background-warning')
+
+    let odCell = document.createElement('div')
+    odCell.classList.add('cell')
+
+    let thkCell = document.createElement('div')
+    thkCell.classList.add('cell')
+
+    let lenCell = document.createElement('div')
+    lenCell.classList.add('cell')
+
+    divGrid.appendChild(odCell)
+    divGrid.appendChild(thkCell)
+    divGrid.appendChild(lenCell)
+
+    let od = textFields('varOD','OD','Outer Diameter of Tube','mm') 
+    odCell.appendChild(od)
+
+    let thk = textFields('varTHK','Thickness','Thickness of Tube','mm') 
+    thkCell.appendChild(thk)
+
+
+    let tlength = textFields('varLength','Length','Length of Tube','mm') 
+    lenCell.appendChild(tlength)
+
+    document.getElementById('mst').appendChild(divGrid)
+
+
+    return true
+}
+
+
+
+
+
+
+
+function SILrenderChangeParamsButton() {
+
+    console.log("Running function :",arguments.callee.name);
+
+
+    /*
+
+    <div class="columns">
+        <div class="column is-half">Number of Sections/Tubes?</div>
+        <div class="column">fieldDiv</div>
+    </div>
+
+    */
+
+    let columnsDiv = document.createElement('div')
+    columnsDiv.classList.add('columns')
+
+    let column1 = document.createElement('div')
+    column1.classList.add('column','is-half')
+    column1.innerHTML = 'Number of Sections/Tubes?'
+
+    let column2 = document.createElement('div')
+    column2.classList.add('column')
+
+    columnsDiv.appendChild(column1)
+    columnsDiv.appendChild(column2)
+
+    /*
+
+    <div class="field">
+        <p class="control">
+            <span class="select">
+                <select>
+                    <option selected>Country</option>
+                    <option>Select dropdown</option>
+                    <option>With options</option>
+                </select>
+            </span>
+        </p>
+    </div>
+
+    */  
+
+
+    let fieldDiv = document.createElement('div')
+    fieldDiv.classList.add('field')
+
+    column2.appendChild(fieldDiv)
+
+    let pControl = document.createElement('p')
+
+    fieldDiv.appendChild(pControl)
+
+
+    let span = document.createElement('span')
+    span.classList.add('select')
+
+    pControl.appendChild(span)
+
+    let select = document.createElement("select");
+    select.id = 'getNoOfSections'
+
+
+    span.appendChild(select)
+
+    for (let index = 1; index <= maxNoOfSections; index++) {
 
         let option = document.createElement("option");
         option.text = index;
         option.value = index;
 
-        if (noOfSections === index) {
+        if (noOfSections == index) {
             option.selected = true
         }
 
-        selectEL.appendChild(option)
-        selectEL.addEventListener('change',getNoOfSections)
+        select.appendChild(option)
+        select.addEventListener('change',getNoOfSections)
     }
+
+    return columnsDiv
 }
 
 
 function getNoOfSections() {
 
-    noOfSections = document.getElementById('getNoOfSections').value
+    console.log("Running function :",arguments.callee.name);
+
+
+    let tempValue = document.getElementById('getNoOfSections').value
+
+
+
+    for (let index = 1; index <= noOfSections; index++) {
+
+        let ndx = 'tubeGrid'+index
+
+        // if(index > noOfSections) {
+
+            document.getElementById(ndx).remove()
+        // }
+
+
+    }
+
+    noOfSections = tempValue
+
+
+
+
+
+    renderAllTubeCards()
+
+
+
+
     console.log(noOfSections)
+
+
+
 
 }
 
