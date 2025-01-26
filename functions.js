@@ -1,5 +1,53 @@
 function getZPositions() {
 
+    data.tubes.forEach((tube, index) => {
+
+        if (index < 1 ) {
+
+            tube.zA = 0;
+            tube.zB = 0;
+            tube.zC = 0;
+
+            tube.zD = tube.length;
+            tube.zE = tube.length;
+            tube.zF = tube.length;
+
+        } else {
+
+            // PREVIOUS TUBE
+            let overlap = data.overlaps[index-1];
+            let pTube = data.tubes[index-1];
+
+            pTube.zD = pTube.zF-overlap.length;
+            pTube.zE = pTube.zF-overlap.length/2;
+
+            // CURRENT TUBE
+            tube.zA = pTube.zD;
+            tube.zB = pTube.zE;
+            tube.zC = pTube.zF;
+
+            tube.zD = tube.zA+tube.length;
+            tube.zE = tube.zA+tube.length;
+            tube.zF = tube.zA+tube.length;
+        }
+
+        data.sys.extendedHeight = tube.zF;
+    })
+
+    data.sys.totalHeight = data.sys.extendedHeight+data.sys.zOffset;
+    console.log("QQQQQQQQ",data.tubes)
+}
+
+
+
+
+
+
+
+
+
+function SILgetZPositions() {
+
     /*
 
     A: Tube Lower Face / BOTTOM, Overlap Minus
@@ -12,6 +60,10 @@ function getZPositions() {
     F: Tube Upper Face / TOP, Overlap Plus
     
     */
+
+    getZs();
+
+    return true;
 
     let position = 0;
     let bottomIncrement = 0;
@@ -86,11 +138,11 @@ function getZPositions() {
 
     });
 
-    data.mast.extendedHeight = position;
+    data.sys.extendedHeight = position;
 }
 
 
-function getTubeMasses() {
+function SILgetTubeMasses() {
 
 
     data.tubes.forEach((tube) => {
@@ -110,7 +162,7 @@ function getTubeMasses() {
 
 
 
-function getMoments() {
+function SILgetMoments() {
 
     data.mast.rootMoment = data.mast.horizontalLoad*(data.mast.extendedHeight+data.mast.zOffset)/1000  ;   // Nm
 
@@ -146,17 +198,14 @@ function getMoments() {
         })
 
 
-    },
-
-
-    );
+    });
 
 
 }
 
 
 
-function getShearLoads() {
+function SILgetShearLoads() {
 
     data.mast.rootShear = data.mast.horizontalLoad;   // N
 
@@ -188,50 +237,27 @@ function getShearLoads() {
 }
 
 
-function getMEI(){
-
-    data.tubes.forEach((tube) => {
-        tube.mei =[] 
-    } ) 
-
-
-    data.tubes.forEach((tube, index) => {
-
-
-        if (index === 0){
-
-            tube.nodes.forEach((point) =>{
-                if (point.name === 'A'|| point.name === 'F'){
-                    tube.mei.push({"h":point.z,"mei":-point.moment/(tube.E*tube.inertia) } )
-                    console.log('larger z',point.z)
-                } 
-            } )
-
-        } else {
-
-
-            tube.nodes.forEach((point) =>{
-                if (point.name === 'C'|| point.name === 'F'){
-                    tube.mei.push({"h":point.z,"mei":-point.moment/(tube.E*tube.inertia) } )
-                    console.log('larger z',point.z)
-                } 
-            } )
-
-        } 
-
-        console.log("MEI",tube.mei)
-
-    } )
-
-} 
 
 
 
 function runCalculations() {
 
-    // getZPositions();
-    // getTubeMasses();
-    // getMoments();
+    console.log("Running function :",arguments.callee.name);
+
+
+    getZPositions();
+    getArea()
+    getRootMoment()
+    getTubeMoments();
+    getInertia()
+    getMass()
+    getEI()
+    getM_EI()
+
+
+    getMomentGraphData()
+
+    //getMoments();
     // getShearLoads();
 
     // getMEI();
@@ -241,9 +267,9 @@ function runCalculations() {
 
     // drawMDiagram();
 
-    renderModalContent(15)
+    // renderModalContent(15)
 
-    getTubeProps();
+    // getTubeProps();
 }
 
 
@@ -252,7 +278,7 @@ function runCalculations() {
 
 
 
-function runInputTable() {
+function SILrunInputTable() {
 
 
     let noOfSections = document.getElementById('noOfSections').value;
@@ -265,123 +291,112 @@ function runInputTable() {
 
 
 
-function getTubeProps() {
 
 
-    let z = 0;
+function getArea() {
+    data.tubes.forEach((tube) => {
+        tube.area = Math.PI /4* (Math.pow(tube.od, 2) - Math.pow(tube.od-2*tube.thickness,2)) ; // mm2
+    })
+} 
 
+function getInertia() {
+    data.tubes.forEach((tube) => {
+        tube.inertia = Math.PI /32* (Math.pow(tube.od, 4) - Math.pow(tube.od-2*tube.thickness,4)) ; // mm4
+    })
+} 
+
+
+function getMass() {
+    data.tubes.forEach((tube) => {
+        tube.mass = tube.area*tube.length*tube.density/1E9; // kg
+    })
+} 
+
+
+
+function getEI() {
+    data.tubes.forEach((tube) => {
+        tube.ei = tube.E*tube.inertia; // Nmm2
+    })
+} 
+
+
+
+
+function getM_EI(){
 
     data.tubes.forEach((tube, index) => {
 
-        tube.zBottom = z;
+        if(!tube.mei) {
+            tube.mei = []
+        }
 
-        z = z + tube.length;
+        console.log("EI",tube.mA,tube.mB,tube.mC,tube.mD,tube.mE,tube.mF,index)
 
-        tube.zTop = z;
-
-        if (data.overlaps[index]){
-            z = z - data.overlaps[index].length 
-        } 
-
-        getArea(tube)
-        getInertia(tube)
-        getMass(tube)
-        getEI(tube)
-    }); 
-
-
-
-
-
-    data.tubes.forEach((tube,index) => {
-
-        if (index < 1){
-            tube.zCritical = false
+        if (index === 0){
+            tube.mei.push({"z":tube.zA,"mei":-tube.mA/tube.ei } )
+            tube.mei.push({"z":tube.zF,"mei":-tube.mF/tube.ei } )
         } else {
-            tube.zCritical = data.tubes[index-1].zTop 
 
-            console.log(tube.zCritical)
+            tube.mei.push({"z":tube.zC,"mei":-tube.mC/tube.ei } )
+            tube.mei.push({"z":tube.zF,"mei":-tube.mF/tube.ei } )
         } 
+        console.log("MEI",tube.mei)
     } )
 
-
-
-
-    data.sys.extendedHeight = z;
-    data.sys.totalHeight = z+data.sys.zOffset;
-
-
-    getRootMoment();
-    getTubeMoments();
-
-    orderHeightValues();
-
-    drawMDiagram();
-
-    findMEIArea();
-
-
-
-    console.log(data.tubes)
-    // console.log(data.sys)
-
-    summary();
-
-
-
-} 
-
-
-function getArea(tube) {
-
-    tube.area = Math.PI /4* (Math.pow(tube.od, 2) - Math.pow(tube.od-2*tube.thickness,2)) ; // mm2
-
-} 
-
-function getInertia(tube) {
-    tube.inertia = Math.PI /32* (Math.pow(tube.od, 4) - Math.pow(tube.od-2*tube.thickness,4)) ; // mm4
-} 
-
-
-function getMass(tube) {
-    tube.mass = tube.area*tube.length*tube.density/1E9; // k
 } 
 
 
 
-function getEI(tube) {
-    tube.ei = tube.E*tube.inertia; // Nmm2
-} 
+
+
+
+
+
 
 function getRootMoment() {
+
+    console.log("Running function :",arguments.callee.name);
+
     data.sys.mRoot = data.sys.horLoad*data.sys.totalHeight/1000; // Nm
 } 
 
 
 function getTubeMoments(){
 
-    data.tubes.forEach((tube,index) => {
+    console.log("Running function :",arguments.callee.name);
 
-        tube.mBottom = data.sys.mRoot*tube.zBottom/data.sys.totalHeight-data.sys.mRoot;
-        tube.mTop = data.sys.mRoot*tube.zTop/data.sys.totalHeight-data.sys.mRoot;
-
-        tube.meiBottom = 1000*tube.mBottom/tube.ei;
-        tube.meiTop = 1000*tube.mTop/tube.ei;
-
-        if (index > 0){
-            tube.mCritical = data.sys.mRoot*tube.zCritical/data.sys.totalHeight-data.sys.mRoot;
-            tube.meiCritical = 1000*tube.mCritical/tube.ei;
-
-        } else{
-            tube.mCritical = false;
-            tube.meiCritical = false;
-        } 
-
-        // console.log("tube.meiBottom",tube.meiBottom)
-        // console.log("tube.meiTop",tube.meiTop)
-
+    data.tubes.forEach((tube) => {
+        tube.mA = data.sys.mRoot*tube.zA/data.sys.totalHeight-data.sys.mRoot;
+        tube.mB = data.sys.mRoot*tube.zB/data.sys.totalHeight-data.sys.mRoot;
+        tube.mC = data.sys.mRoot*tube.zC/data.sys.totalHeight-data.sys.mRoot;
+        tube.mD = data.sys.mRoot*tube.zD/data.sys.totalHeight-data.sys.mRoot;
+        tube.mE = data.sys.mRoot*tube.zE/data.sys.totalHeight-data.sys.mRoot;
+        tube.mF = data.sys.mRoot*tube.zF/data.sys.totalHeight-data.sys.mRoot;
     }) 
 } 
+
+
+
+function  getMomentGraphData() {
+
+    data.sys.mData = [{"x":0,"y":-data.sys.mRoot}]
+
+    data.tubes.forEach((tube,index) => {
+
+        if (index > 0) {
+            data.sys.mData.push({"x":tube.zF,"y":tube.mF})
+        } 
+
+    })
+
+    data.sys.mData.push({"x":data.sys.totalHeight,"y":0})
+}
+
+
+
+
+
 
 
 

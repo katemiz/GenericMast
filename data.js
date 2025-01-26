@@ -3,12 +3,12 @@ let data = {
 
     "sys": {
         "horLoad":500,
-        "zOffset": 0,
+        "zOffset": 300,
     },
 
     "tubes": [
         {
-            "length": 1800,
+            "length": 1000,
             "od": 270,
             "thickness": 5,
             "density": 2710,

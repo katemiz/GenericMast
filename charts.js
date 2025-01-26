@@ -4,19 +4,17 @@ function drawMDiagram(){
 
 
     let dsets = [
-      {
-       label:"Bending Moment",
-       data:data.sys.momentData,
-       parsing:{
-         yAxisKey:'y'
-       }
-      } 
-     ]
+    {
+      label:"Bending Moment",
+      data:data.sys.mData,
+      parsing:{
+        yAxisKey:'y'
+      }
+    } 
+    ]
 
 
     data.tubes.forEach((tube,index) =>{
-
-
       dsets.push(
           {
             label:'T'+index,
@@ -28,9 +26,7 @@ function drawMDiagram(){
             fill:true
           } 
       )
-
-
-    } )
+    })
 
 
     dsets.push(

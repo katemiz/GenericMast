@@ -13,10 +13,14 @@ function runSequence() {
     // Render Modal
     renderModalContent()
 
+    // Calculations
+    runCalculations()
+
 
 
 
     // Render Graph
+    drawMDiagram()
 
 
     // Set Values
