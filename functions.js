@@ -257,6 +257,8 @@ function runCalculations() {
 
     getMomentGraphData()
 
+    findMEIArea()
+
     //getMoments();
     // getShearLoads();
 
@@ -296,12 +298,14 @@ function SILrunInputTable() {
 function getArea() {
     data.tubes.forEach((tube) => {
         tube.area = Math.PI /4* (Math.pow(tube.od, 2) - Math.pow(tube.od-2*tube.thickness,2)) ; // mm2
+        tube.areaM2 = 1E-6*tube.area ; // m2
     })
 } 
 
 function getInertia() {
     data.tubes.forEach((tube) => {
         tube.inertia = Math.PI /32* (Math.pow(tube.od, 4) - Math.pow(tube.od-2*tube.thickness,4)) ; // mm4
+        tube.inertiaM4 = 1E-12*tube.inertia; // m4
     })
 } 
 
@@ -317,6 +321,7 @@ function getMass() {
 function getEI() {
     data.tubes.forEach((tube) => {
         tube.ei = tube.E*tube.inertia; // Nmm2
+        tube.eiNm2 = 1E-3*tube.ei; // Nm2
     })
 } 
 
@@ -325,24 +330,59 @@ function getEI() {
 
 function getM_EI(){
 
+    let minMax = [];
+
+    let meiA,meiC,meiF;
+
     data.tubes.forEach((tube, index) => {
+
+        // Tube moments are in Nm
 
         if(!tube.mei) {
             tube.mei = []
         }
 
-        console.log("EI",tube.mA,tube.mB,tube.mC,tube.mD,tube.mE,tube.mF,index)
+        meiA = -tube.mA/tube.eiNm2; // 1/m
+        meiC = -tube.mC/tube.eiNm2; // 1/m
+        meiF = -tube.mF/tube.eiNm2; // 1/m
+
+        console.log("mei A C F",meiA,meiC,meiF,index)
 
         if (index === 0){
-            tube.mei.push({"z":tube.zA,"mei":-tube.mA/tube.ei } )
-            tube.mei.push({"z":tube.zF,"mei":-tube.mF/tube.ei } )
+            tube.mei.push({"z":tube.zA,"mei":meiA } )    
+            tube.mei.push({"z":tube.zF,"mei":meiF } )  
+            
+            minMax.push(meiA,meiF)
+
         } else {
 
-            tube.mei.push({"z":tube.zC,"mei":-tube.mC/tube.ei } )
-            tube.mei.push({"z":tube.zF,"mei":-tube.mF/tube.ei } )
+            tube.mei.push({"z":tube.zC,"mei":meiC } )    
+            tube.mei.push({"z":tube.zF,"mei":meiF } )  
+
+            minMax.push(meiC,meiF)
         } 
-        console.log("MEI",tube.mei)
+
+        console.log("MEI 1/m",tube.mei)
     } )
+
+    data.sys.meiMin = Math.min(...minMax)
+    data.sys.meiMax =  Math.max(...minMax)
+
+    // let k = 0.75*data.sys.mRoot/data.sys.meiMin
+
+    // console.log("k",k)
+
+    // data.tubes.forEach((tube) => {
+
+    //     tube.mei.forEach((m) => {
+    //         m.mei = k*m.mei
+    //     })
+
+    // })
+
+
+    console.log("Min of ",Math.min(...minMax))
+    console.log("Maxf ",Math.max(...minMax))
 
 } 
 
@@ -358,7 +398,7 @@ function getRootMoment() {
 
     console.log("Running function :",arguments.callee.name);
 
-    data.sys.mRoot = data.sys.horLoad*data.sys.totalHeight/1000; // Nm
+    data.sys.mRoot = data.sys.horLoad*data.sys.totalHeight/1E3; // Nm
 } 
 
 
@@ -367,12 +407,12 @@ function getTubeMoments(){
     console.log("Running function :",arguments.callee.name);
 
     data.tubes.forEach((tube) => {
-        tube.mA = data.sys.mRoot*tube.zA/data.sys.totalHeight-data.sys.mRoot;
-        tube.mB = data.sys.mRoot*tube.zB/data.sys.totalHeight-data.sys.mRoot;
-        tube.mC = data.sys.mRoot*tube.zC/data.sys.totalHeight-data.sys.mRoot;
-        tube.mD = data.sys.mRoot*tube.zD/data.sys.totalHeight-data.sys.mRoot;
-        tube.mE = data.sys.mRoot*tube.zE/data.sys.totalHeight-data.sys.mRoot;
-        tube.mF = data.sys.mRoot*tube.zF/data.sys.totalHeight-data.sys.mRoot;
+        tube.mA = data.sys.mRoot*tube.zA/data.sys.totalHeight-data.sys.mRoot; // Nm
+        tube.mB = data.sys.mRoot*tube.zB/data.sys.totalHeight-data.sys.mRoot; // Nm
+        tube.mC = data.sys.mRoot*tube.zC/data.sys.totalHeight-data.sys.mRoot; // Nm
+        tube.mD = data.sys.mRoot*tube.zD/data.sys.totalHeight-data.sys.mRoot; // Nm
+        tube.mE = data.sys.mRoot*tube.zE/data.sys.totalHeight-data.sys.mRoot; // Nm
+        tube.mF = data.sys.mRoot*tube.zF/data.sys.totalHeight-data.sys.mRoot; // Nm
     }) 
 } 
 
@@ -382,16 +422,28 @@ function  getMomentGraphData() {
 
     data.sys.mData = [{"x":0,"y":-data.sys.mRoot}]
 
-    data.tubes.forEach((tube,index) => {
-
-        if (index > 0) {
-            data.sys.mData.push({"x":tube.zF,"y":tube.mF})
-        } 
-
+    data.tubes.forEach((tube) => {
+        data.sys.mData.push({"x":tube.zF,"y":tube.mF})
     })
 
     data.sys.mData.push({"x":data.sys.totalHeight,"y":0})
 }
+
+
+// function  getMeiGraphData() {
+
+//     data.sys.mData = [{"x":0,"y":-data.sys.mRoot}]
+
+//     data.tubes.forEach((tube,index) => {
+
+//         if (index < 1) {
+//             data.sys.mData.push({"x":tube.zF,"y":tube.mF})
+//         }
+//     })
+
+//     data.sys.mData.push({"x":data.sys.totalHeight,"y":0})
+// }
+
 
 
 
@@ -457,28 +509,18 @@ function findMEIArea(){
 
     data.tubes.forEach((tube,index) => {
 
-
         // xbar is centroid from L/H side
         let xbar_lh = findTrapezoidAreaAndCentroid(tube)
 
-        if (index < 1){
+        // if (index < 1){
+        //     xbar_rh = data.sys.extendedHeight-xbar_lh
+        //     z = tube.zF
+        // } else {
+            xbar_rh = data.sys.extendedHeight-(tube.zC+xbar_lh)
+            z = tube.zF
+        // } 
 
-            xbar_rh = data.sys.extendedHeight-xbar_lh
-
-            z = tube.zTop
-
-        } else {
-            xbar_rh = data.sys.extendedHeight-(tube.zCritical+xbar_lh)
-
-            z = tube.zCritical
-
-
-        } 
-
-
-
-
-        deflection = deflection+tube.areaMEI*xbar_rh
+        deflection = deflection+tube.areaMEI*xbar_rh*1000;   // mm
 
         data.sys.deflection.push({
             "x":z,
@@ -488,15 +530,10 @@ function findMEIArea(){
         console.log("xbar",xbar_lh)
 
         console.log("xbar_right",xbar_rh)
-        console.log("deflection",deflection)
-
-
-
-
-
-
-
+        console.log("deflection",data.sys.deflection)
     } )
+
+    data.sys.maxDeflection = deflection
 
 
 
@@ -517,19 +554,31 @@ function findMEIArea(){
 
 function findTrapezoidAreaAndCentroid(tube) {
 
-    let x1 = tube.zCritical ? tube.zCritical : tube.zBottom
-    let x2 = tube.zTop
+    let x1,x2;
+    let v1,v2;
 
-    let v1 = tube.meiCritical ? tube.meiCritical : tube.meiBottom
-    let v2 = tube.meiTop
+    if (tube.zA === 0) {
+        x1 = tube.zA
+    } else {
+        x1 = tube.zC
+    }
+
+    x2 = tube.zF
+
+    v1 = tube.mei[0].mei    // 1/m
+    v2 = tube.mei[1].mei    // 1/m
+
+
+
+
 
     x1 = Math.abs(x1)
     x2 = Math.abs(x2)
     v1 = Math.abs(v1)
     v2 = Math.abs(v2)
 
-    let xdist = Math.abs(x1-x2)
-    let vdifference = v1-v2
+    let xdist = Math.abs(x1-x2)/1000; // m
+    let vdifference = v1-v2           // 1/m
 
     // console.log('v1',v1)
     // console.log('v2',v2)
@@ -541,7 +590,7 @@ function findTrapezoidAreaAndCentroid(tube) {
     let areaTotal = (v1+v2)*xdist/2
 
     // Total area under M/EI diagram
-    tube.areaMEI = areaTotal
+    tube.areaMEI = areaTotal        // unitless
 
     let minV = v1 > v2 ? v2 : v1
 

@@ -4,29 +4,31 @@ function drawMDiagram(){
 
 
     let dsets = [
-    {
-      label:"Bending Moment",
-      data:data.sys.mData,
-      parsing:{
-        yAxisKey:'y'
-      }
-    } 
+      {
+        label:"Bending Moment",
+        data:data.sys.mData,
+        parsing:{
+          yAxisKey:'y'
+        }
+      } 
     ]
 
 
-    data.tubes.forEach((tube,index) =>{
-      dsets.push(
-          {
-            label:'T'+index,
-            data:tube.meiData,
-            yAxisId:'y1',
-            parsing:{
-              yAxisKey:'y'
-            },
-            fill:true
-          } 
-      )
-    })
+    // data.tubes.forEach((tube,index) =>{
+    //   dsets.push(
+    //     {
+    //       label:'T'+index,
+    //       data:tube.mei,
+    //       yAxisId:'y1',
+    //       parsing:{
+    //         xAxisKey:'z',
+
+    //         yAxisKey:'mei'
+    //       },
+    //       fill:true
+    //     } 
+    //   )
+    // })
 
 
     dsets.push(
@@ -39,12 +41,12 @@ function drawMDiagram(){
         },
         fill:true
       } 
-  )
+    )
 
 
     
 
-    console.log(dsets)
+    console.log("DSETS",dsets)
     
     
     new Chart(
@@ -83,28 +85,26 @@ function drawMDiagram(){
                           display: true,
                           text: 'Moment, Nm'
                         },
-
                       },
 
-                      y1:{
-                        type:'linear',
-                        display:true,
-                        position:'right',
+                      // y1:{
+                      //   type:'logarithmic',
+                      //   display:true,
+                      //   position:'right',
 
-                        title: {
-                            display: true,
-                            text: 'M/EI, 1/m [x 1E-9] '
-                        },
+                      //   title: {
+                      //       display: true,
+                      //       text: 'M/EI, 1/m [x 1E-9] '
+                      //   },
 
-                        grid:{
-                            drawOnChartArea: false,
+                      //   grid:{
+                      //       drawOnChartArea: false,
+                      //   },
 
-                        },
 
-
-                        // suggestedMin: 3, // Adjust as needed
-                        // suggestedMax: 10 // Adjust as needed
-                      } ,
+                      //   min: data.sys.meiMin, // Adjust as needed
+                      //   max: data.sys.meiMax // Adjust as needed
+                      // } ,
 
 
                       y2:{
@@ -113,18 +113,17 @@ function drawMDiagram(){
                         position:'right',
 
                         title: {
-                            display: true,
-                            text: 'mm'
+                          display: true,
+                          text: 'mm'
                         },
 
                         grid:{
-                            drawOnChartArea: false,
-
+                          drawOnChartArea: false,
                         },
 
 
-                        // suggestedMin: 3, // Adjust as needed
-                        // suggestedMax: 10 // Adjust as needed
+                        // min: 0, 
+                        // max: 1 
                       } 
 
 
@@ -144,3 +143,165 @@ function drawMDiagram(){
 
 
 
+
+
+function drawMeiChart(){
+
+
+
+  let dsets = []
+
+
+  data.tubes.forEach((tube,index) =>{
+    dsets.push(
+      {
+        label:'T'+index,
+        data:tube.mei,
+        yAxisId:'y',
+        parsing:{
+          xAxisKey:'z',
+          yAxisKey:'mei'
+        },
+        fill:true
+      } 
+    )
+  })
+
+
+
+
+  
+
+  console.log("DSETS",dsets)
+  
+  
+  new Chart(
+      document.getElementById('meiChart'),
+      {
+          type: 'line',
+          data: {
+              labels: data.sys.zArray,
+              datasets:dsets ,
+          },
+
+          options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'DIAGRAM'
+                },
+              },
+              interaction: {
+                intersect: false,
+              },
+              scales: {
+                  x: {
+                      type:'linear',
+                      display: true,
+                      title: {
+                        display: true,
+                        text:'Height, mm'
+                      }
+                    },
+                    y: {
+                      type:'logarithmic',
+                      display: true,
+                      title: {
+                        display: true,
+                        text: 'M/EI, 1/m'
+                      },
+                      min: data.sys.meiMin, // Adjust as needed
+                      max: data.sys.meiMax // Adjust as needed
+                    },
+
+
+
+
+
+
+
+              }
+            },
+
+      }
+  
+  
+  );
+  
+
+
+} 
+
+
+function drawDeflectionChart(){
+
+
+let dsets = [
+  {
+    label:'Deflection',
+    data:data.sys.deflection,
+    // yAxisId:'y',
+    parsing:{
+      xAxisKey:'x',
+      yAxisKey:'y'
+    },
+    fill:false
+  } 
+]
+
+
+
+
+  
+  
+  new Chart(
+      document.getElementById('deflectionChart'),
+      {
+          type: 'line',
+          data: {
+              labels: data.sys.zArray,
+              datasets:dsets ,
+          },
+
+          options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'DIAGRAM'
+                },
+              },
+              interaction: {
+                intersect: false,
+              },
+              scales: {
+                  x: {
+                      type:'linear',
+                      display: true,
+                      title: {
+                        display: true,
+                        text:'Height, mm'
+                      }
+                    },
+                    y: {
+                      type:'linear',
+                      display: true,
+                      title: {
+                        display: true,
+                        text: 'Deflection, mm'
+                      },
+                      min: -0.2, 
+                      max: data.sys.maxDeflection*1.04
+                    },
+              }
+            },
+
+      }
+  
+  
+  );
+  
+
+
+} 

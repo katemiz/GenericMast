@@ -22,6 +22,12 @@ function runSequence() {
     // Render Graph
     drawMDiagram()
 
+    drawMeiChart()
+    drawDeflectionChart()
+
+    deflectionGraph()
+    meiGraph()
+
 
     // Set Values
 
