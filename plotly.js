@@ -1,5 +1,3 @@
-
-
 function deflectionGraph() {
 
     TESTER = document.getElementById('moment_deflection');
@@ -12,10 +10,6 @@ function deflectionGraph() {
         yDizin.push(-p.y)
     })
 
-    console.log('xDizin',xDizin)
-    console.log('yDizin',yDizin)
-
-
     var sehim = {
         x: xDizin,
         y: yDizin,
@@ -25,7 +19,6 @@ function deflectionGraph() {
         name: 'Deflection, mm'
     };
       
-
     let xMoment =[]
     let yMoment =[]
 
@@ -34,47 +27,19 @@ function deflectionGraph() {
         yMoment.push(p.y)
     })
 
-
-
     var moment = {
         x: xMoment,
         y: yMoment,
         fill: 'tozeroy',
-
         mode: 'lines+markers',
         name: 'Moment, Nm'
     };
 
-
-    // var trace2 = {
-
-    //     x: [2, 3, 4],
-      
-    //     y: [4, 5, 6],
-      
-    //     name: 'yaxis2 data',
-      
-    //     yaxis: 'y2',
-      
-    //     type: 'scatter'
-      
-    //   };
-
-
-      
-    var trace3 = {
-        x: [1, 2, 3, 4],
-        y: [12, 9, 15, 12],
-        mode: 'lines+markers',
-        name: 'Scatter and Lines'
-    };
-      
-    var veri = [sehim,moment ];
+    var veri = [sehim,moment];
 
     var layout = {
-
         title: {
-          text: 'Deflection Graph'
+          text: 'Bending Moment and Deflection Graph'
         },
       
         xaxis: {
@@ -92,26 +57,15 @@ function deflectionGraph() {
         yaxis2: {
             title: {
               text: 'Deflection, mm',
-              font: {color: 'rgb(148, 103, 189)'}
+              font: {color: 'rgb(18, 9, 110)'}
             },
         
-            tickfont: {color: 'rgb(148, 103, 189)'},
+            tickfont: {color: 'rgb(248, 11, 11)'},
             overlaying: 'y',
             side: 'right'
         },
 
-
-
-
-
-
         showlegend: true,
-
-        // legend: {
-        //   x: 1,
-        //   xanchor: 'right',
-        //   y: 1
-        // }
     };
 
     Plotly.newPlot(TESTER, veri, layout);
@@ -132,24 +86,20 @@ function meiGraph() {
         })
     })
 
-    console.log('xDizin',xDizin)
-    console.log('yDizin',yDizin)
-
     var mei_data = {
         x: xDizin,
         y: yDizin,
-        yaxis: 'y2',
         fill: 'tozeroy',
         mode: 'lines+markers',
-        name: 'Deflection, mm'
+        name: 'M/EI, 1/mm'
     };
             
-    var veri = [mei_data ];
+    var veri = [mei_data];
 
     var layout = {
 
         title: {
-          text: 'Deflection Graph'
+          text: 'M/EI Graph'
         },
       
         xaxis: {
@@ -160,33 +110,17 @@ function meiGraph() {
       
         yaxis: {
           title: {
-            text: 'Moment, Nm'
+            text: 'M/EI, 1/mm'
           }
         },
 
-        yaxis2: {
-            title: {
-              text: 'Deflection, mm',
-              font: {color: 'rgb(148, 103, 189)'}
-            },
-        
-            tickfont: {color: 'rgb(148, 103, 189)'},
-            overlaying: 'y',
-            side: 'right'
-        },
-
-
-
-
-
-
         showlegend: true,
 
-        // legend: {
-        //   x: 1,
-        //   xanchor: 'right',
-        //   y: 1
-        // }
+        legend: {
+          x: 1,
+          xanchor: 'right',
+          y: 1
+        }
     };
 
     Plotly.newPlot(TESTER, veri, layout);

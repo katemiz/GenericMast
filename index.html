@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Mast Structural Analysis</title>
 
     <link rel="icon" type="image/x-icon" href="https://masttech.net/images/favicon.ico">
 
@@ -14,75 +14,40 @@
     <script src="../data.js"></script>
     <script src="../modal.js"></script>
     <script src="../functions.js"></script>
-    <script src="../gui.js"></script>
+    <script src="../propsTable.js"></script>
     <script src="../index.js"></script>
     <script src="../plotly.js"></script>
 
 
-
-
     <script>
-
         window.onload = function() {
-
             runSequence()
-
-            //renderModalContent(noOfSections)
-
-
-            //runCalculations()
         };
 
         function refreshCalcs() {
             toggleModal()
         }
-
     </script>
 
-    <script src="./node_modules/chart.js/dist/chart.umd.js"></script>
-
-
-
-
-
 </head>
-<body class="container">
 
 
+<body class="container has-background-white-ter">
 
-
-      <section class="section is-large">
+      <section class="section ">
 
         <h1 class="title is-size-1 ">Telescopic Mast Structure</h1>
         <h2 class="subtitle">
           Bending Moment and Deflection Calculation for Variable Section Mast Structures
         </h2>
 
-        <button class="button" onclick="toggleModal()">Edit Mast Parameters</button>
+        <button class="button is-dark" onclick="toggleModal()">Edit Mast Parameters</button>
 
-        <!-- <div class="flex justify-center">
-            <canvas id="graph" class="border border-red-300"></canvas>
-        </div> -->
-
-
-        <!-- GRAPH: Charts.js -->
-        <div div class="card">
-            <h2 class="subtitle">Bending Moment and Deflection Graphs</h2>
-            <canvas id="myChart"></canvas>
+        <div class="card my-4 has-text-centered" id="graphDiv">
+            <canvas id="graph"></canvas>
         </div>
 
 
-        <!-- GRAPH: Charts.js -->
-        <div div class="card">
-            <h2 class="subtitle">M/EI Chart</h2>
-            <canvas id="meiChart"></canvas>
-        </div>
-
-        <!-- GRAPH: Deflection Charts.js -->
-        <div div class="card">
-            <h2 class="subtitle">Deflection Chart</h2>
-            <canvas id="deflectionChart"></canvas>
-        </div>
 
 
 
@@ -91,7 +56,6 @@
             <!-- propsTable.js -->
             <!-- Content Populated by propsTable() -->
         </div>
-
 
         <div class="modal" id="modal">
             <div class="modal-background" onclick="toggleModal()"></div>
@@ -166,31 +130,12 @@
             </div>
         </div>
 
-
-
-
-
-        <div id="moment_deflection" class="card has-background-warning p-8"></div>
-
-        <div id="mei" class="card has-background-warning p-8"></div>
-
-
-
-
+        <div id="moment_deflection" class="card has-background-warning my-4 p-8"></div>
+        <div id="mei" class="card has-background-warning my-4 p-8"></div>
 
     </section>
 
-
-
-
- 
-
-
-
-    <!-- <script src="../canvas.js"></script> -->
-    <script src="../charts.js"></script>
-
-
+    <script src="../canvas.js"></script>
 
     
 </body>

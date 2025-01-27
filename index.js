@@ -1,12 +1,9 @@
-
-
-
-
 function runSequence() {
 
-    // Draw Tubes Geometry
-
     console.log("Running function :",arguments.callee.name);
+
+
+    // Draw Tubes Geometry
 
 
 
@@ -20,10 +17,10 @@ function runSequence() {
 
 
     // Render Graph
-    drawMDiagram()
+    // drawMDiagram()
 
-    drawMeiChart()
-    drawDeflectionChart()
+    // drawMeiChart()
+    // drawDeflectionChart()
 
     deflectionGraph()
     meiGraph()
@@ -32,6 +29,9 @@ function runSequence() {
     // Set Values
 
     setValues()
+
+    runPropsTable()
+
 }
 
 
