@@ -35,7 +35,6 @@ function getZPositions() {
     })
 
     data.sys.totalHeight = data.sys.extendedHeight+data.sys.zOffset;
-    console.log("QQQQQQQQ",data.tubes)
 }
 
 
@@ -46,195 +45,11 @@ function getZPositions() {
 
 
 
-function SILgetZPositions() {
 
-    /*
 
-    A: Tube Lower Face / BOTTOM, Overlap Minus
-    B: Tube Lower Face / BOTTOM, Overlap Center
-    C: Tube Lower Face / BOTTOM, Overlap Plus
 
 
-    D: Tube Upper Face / TOP, Overlap Minus
-    E: Tube Upper Face / TOP, Overlap Center
-    F: Tube Upper Face / TOP, Overlap Plus
-    
-    */
 
-    getZs();
-
-    return true;
-
-    let position = 0;
-    let bottomIncrement = 0;
-    let topIncrement = 0;
-
-    data.tubes.forEach((tube, index) => {
-
-        tube.nodes = [];
-
-        tube.nodes.push(
-            {
-                "name": "A",
-                "explanation": "BOTTOM, Overlap Minus",
-                "z":position,
-            },
-            {
-                "name": "B",
-                "explanation": "BOTTOM, Overlap Center",
-                "z":position+bottomIncrement,
-            },
-            {
-                "name": "C",
-                "explanation": "BOTTOM, Overlap Plus",
-                "z":position+2*bottomIncrement,
-            }
-        );
-
-        tube.x0 = position;
-
-        position += tube.length;
-
-        // console.log("pos",position)
-
-        if (index < data.tubes.length-1) {
-            topIncrement = data.overlaps[index].length/2;
-        }
-
-        if (index === data.tubes.length-1) {
-            topIncrement = 0;
-        }
-
-
-        tube.nodes.push(
-            {
-                "name": "D",
-                "explanation": "TOP, Overlap Minus",
-                "z":position-2*topIncrement,
-            },
-            {
-                "name": "E",
-                "explanation": "TOP, Overlap Center",
-                "z":position-topIncrement,
-            },
-            {
-                "name": "F",
-                "explanation": "TOP, Overlap Plus",
-                "z":position,
-            }
-        );
-
-
-        if (index < data.tubes.length-1) {
-            data.overlaps[index].z = position-topIncrement
-
-            data.overlaps[index].zMinus = data.overlaps[index].z-data.overlaps[index].length/2;
-            data.overlaps[index].zPlus = data.overlaps[index].z+data.overlaps[index].length/2;
-        }
-
-
-        bottomIncrement = topIncrement;
-        position -= 2*topIncrement;
-
-    });
-
-    data.sys.extendedHeight = position;
-}
-
-
-function SILgetTubeMasses() {
-
-
-    data.tubes.forEach((tube) => {
-
-        tube.area = Math.PI /4* (Math.pow(tube.od, 2) - Math.pow(tube.od-tube.thickness,2)) ; // mm2
-        tube.inertia = Math.PI /32* (Math.pow(tube.od, 4) - Math.pow(tube.od-tube.thickness,4)) ; // mm4
-
-        tube.mass = tube.area*tube.length*tube.density/1E9;
-
-        tube.ei = tube.E*tube.inertia/1E12;
-    }
-
-    );
-
-    console.log("Tubes MASS", data.tubes);
-}
-
-
-
-function SILgetMoments() {
-
-    data.mast.rootMoment = data.mast.horizontalLoad*(data.mast.extendedHeight+data.mast.zOffset)/1000  ;   // Nm
-
-    data.tubes.forEach((tube) => {
-
-        tube.nodes.forEach((node) => {
-            node.moment = data.mast.rootMoment*(data.mast.extendedHeight+data.mast.zOffset-node.z)/(data.mast.extendedHeight+data.mast.zOffset)
-
-            data.overlaps.forEach((overlap) => {
-
-                if (overlap.z == node.z) {
-                    overlap.moment = node.moment
-                    overlap.loadDueToMoment =1000*overlap.moment/overlap.length
-                }
-            });
-
-            let hasNode = false;
-
-            data.moments.forEach((m) =>{
-
-                if (m.h === node.z){
-                    hasNode = true;
-                } 
-            } )
-
-
-            if (!hasNode){
-
-                data.moments.push({"h":node.z,"moment":-node.moment}) 
-            } 
-
-            
-        })
-
-
-    });
-
-
-}
-
-
-
-function SILgetShearLoads() {
-
-    data.mast.rootShear = data.mast.horizontalLoad;   // N
-
-
-
-
-
-
-    data.tubes.forEach((tube) => {
-        tube.nodes.forEach((node) => {
-
-            node.shear = data.mast.rootShear;
-
-            data.overlaps.forEach((overlap) => {
-
-
-                if (overlap.zMinus == node.z) {
-                    node.shear = overlap.loadDueToMoment
-                }
-
-                if (overlap.zPlus == node.z) {
-                    node.shear = data.mast.rootShear+overlap.loadDueToMoment
-                }
-
-            });
-
-        })
-    });
-}
 
 
 
@@ -259,37 +74,16 @@ function runCalculations() {
 
     findMEIArea()
 
-    //getMoments();
-    // getShearLoads();
 
-    // getMEI();
-
-    // runCanvas();
-    // summary();
-
-    // drawMDiagram();
-
-    // renderModalContent(15)
-
-    // getTubeProps();
-}
-
-
-
-
-
-
-
-function SILrunInputTable() {
-
-
-    let noOfSections = document.getElementById('noOfSections').value;
-    console.log("noOfSections",noOfSections)
-
-    renderModalContent(noOfSections)
+    getMastConfigurations()
 
 
 }
+
+
+
+
+
 
 
 
@@ -346,8 +140,6 @@ function getM_EI(){
         meiC = -tube.mC/tube.eiNm2; // 1/m
         meiF = -tube.mF/tube.eiNm2; // 1/m
 
-        console.log("mei A C F",meiA,meiC,meiF,index)
-
         if (index === 0){
             tube.mei.push({"z":tube.zA,"mei":meiA } )    
             tube.mei.push({"z":tube.zF,"mei":meiF } )  
@@ -362,27 +154,12 @@ function getM_EI(){
             minMax.push(meiC,meiF)
         } 
 
-        console.log("MEI 1/m",tube.mei)
     } )
 
     data.sys.meiMin = Math.min(...minMax)
     data.sys.meiMax =  Math.max(...minMax)
 
-    // let k = 0.75*data.sys.mRoot/data.sys.meiMin
 
-    // console.log("k",k)
-
-    // data.tubes.forEach((tube) => {
-
-    //     tube.mei.forEach((m) => {
-    //         m.mei = k*m.mei
-    //     })
-
-    // })
-
-
-    console.log("Min of ",Math.min(...minMax))
-    console.log("Maxf ",Math.max(...minMax))
 
 } 
 
@@ -429,20 +206,6 @@ function  getMomentGraphData() {
     data.sys.mData.push({"x":data.sys.totalHeight,"y":0})
 }
 
-
-// function  getMeiGraphData() {
-
-//     data.sys.mData = [{"x":0,"y":-data.sys.mRoot}]
-
-//     data.tubes.forEach((tube,index) => {
-
-//         if (index < 1) {
-//             data.sys.mData.push({"x":tube.zF,"y":tube.mF})
-//         }
-//     })
-
-//     data.sys.mData.push({"x":data.sys.totalHeight,"y":0})
-// }
 
 
 
@@ -512,13 +275,9 @@ function findMEIArea(){
         // xbar is centroid from L/H side
         let xbar_lh = findTrapezoidAreaAndCentroid(tube)
 
-        // if (index < 1){
-        //     xbar_rh = data.sys.extendedHeight-xbar_lh
-        //     z = tube.zF
-        // } else {
-            xbar_rh = data.sys.extendedHeight-(tube.zC+xbar_lh)
-            z = tube.zF
-        // } 
+
+        xbar_rh = data.sys.extendedHeight-(tube.zC+xbar_lh)
+        z = tube.zF
 
         deflection = deflection+tube.areaMEI*xbar_rh*1000;   // mm
 
@@ -527,10 +286,6 @@ function findMEIArea(){
             "y":deflection
         } )
 
-        console.log("xbar",xbar_lh)
-
-        console.log("xbar_right",xbar_rh)
-        console.log("deflection",data.sys.deflection)
     } )
 
     data.sys.maxDeflection = deflection
@@ -618,3 +373,221 @@ function findTrapezoidAreaAndCentroid(tube) {
 
     return xbar;
 } 
+
+
+
+
+function getMastConfigurations() {
+
+    let sayac;
+    let noSections = 2
+
+    let configurations = []
+
+
+    const originalData = [ ...data.tubes];
+
+    console.log("OriginalData",originalData)
+    console.log("OriginalData Length",originalData.length)
+
+
+
+    for (let i = noSections; i <= noOfSections; i++) {
+
+        sayac = 'M'+i+'SECTION'
+
+        
+        configurations[i] = []
+
+        for (let index = 0; index <= originalData.length-noSections; index++) {
+
+            // const newData = [ ...originalData];
+
+            // console.log("Original array length",originalData.length)
+
+
+            // let v = newData.splice(index,noSections)
+
+            // console.log("replaced array length",v.length)
+
+            // console.log("index,noSe")
+
+            let v = [ ...originalData].splice(index,i)
+
+            // console.log()
+
+            if (v.length === i) {
+                configurations[i].push([ ...originalData].splice(index,i))  
+
+            }
+
+            
+            
+        }
+
+    }
+
+    console.log(configurations)
+
+    let table = []
+
+    configurations.forEach((c) => {
+
+        let confDizin = []
+
+
+        c.forEach((d) => {
+
+            let satir = false
+
+            d.forEach((gg) => {
+
+                if (satir) {
+                    satir += '-'+gg.od
+                } else {
+                    satir = gg.od
+                }
+            })
+
+            confDizin.push({
+                "text":satir,
+                "weight":"weight",
+                "deflection":"deflection"
+            })
+
+
+            console.log("SATIR",satir)
+        })
+
+        console.log('----------------------')
+
+        if (confDizin.length>0) {
+            table.push({
+                "noOfConf":c.length,
+                "confs":confDizin,
+            })
+        }
+    })
+
+    console.log(table)
+
+    addConfRow(table)
+
+    
+}
+
+
+
+
+
+
+
+
+
+
+function addConfRow(table) {
+
+
+
+    //     <tr>
+    //     <td rowspan="4">2</td>
+    //     <td>sfdsfdf</td>
+    //     <td>sfdsfdf</td>
+    //     <td>sfdsfdf</td>
+    // </tr>
+
+    // <tr>
+    //     <td>sfdsfdf</td>
+    //     <td>sfdsfdf</td>
+    //     <td>sfdsfdf</td>
+    // </tr>
+
+    // <tr>
+    //     <td>sfdsfdf</td>
+    //     <td>sfdsfdf</td>
+    //     <td>sfdsfdf</td>
+    // </tr>
+
+    // console.log("ccccccccc",c)
+
+
+    let p = document.getElementById('confBody')
+
+    let tr,tdTitle,tdConf,tdWeight,tdDeflection
+
+    table.forEach((row) => {
+
+        row.confs.forEach((r,index) => {
+
+            tr = document.createElement('tr')
+
+            if (index < 1) {
+                tdTitle = document.createElement('td')
+                tdTitle.rowSpan =row.confs.length
+                tdTitle.innerHTML = 'MST'
+                tr.appendChild(tdTitle)
+            }
+
+            tdConf = document.createElement('td')
+            tdConf.innerHTML = r.text
+
+            tr.appendChild(tdConf)
+
+            tdWeight = document.createElement('td')
+            tdWeight.innerHTML = r.weight
+
+            tr.appendChild(tdWeight)
+
+
+            tdDeflection = document.createElement('td')
+            tdDeflection.innerHTML = r.deflection
+
+            tr.appendChild(tdDeflection)
+        })
+
+        p.appendChild(tr)
+
+
+    })
+
+
+
+
+
+
+
+
+    // c.forEach((d) => {
+    //     let satir = ''
+
+    //     d.forEach((gg) => {
+    //         satir += gg.od+'-'
+    //     })
+    //     console.log("SATIR",satir)
+
+    //     let confTD = document.createElement('td')
+    //     confTD.innerHTML = satir
+
+    //     headTD.appendChild(confTD)
+    
+    //     let wTD = document.createElement('td')
+    //     wTD.innerHTML = 'weight'
+    //     headTD.appendChild(wTD)
+
+    
+    //     let dTD = document.createElement('td')
+    //     dTD.innerHTML ='Deflection'
+
+    //     headTD.appendChild(dTD)
+
+    //     console.log("éoley")
+
+    // })
+
+
+
+
+
+
+
+}

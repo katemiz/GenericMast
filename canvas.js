@@ -8,6 +8,8 @@ let r1Height;
 let addx = 60;
 let addy = 40;
 
+let payloadCircleDia = 10
+
 
 window.addEventListener('resize',() => {
 
@@ -28,7 +30,7 @@ window.addEventListener('load',() => {
     r1Width = canvas.width
     r1Height = canvas.height
 
-    sx = r1Width/(data.sys.extendedHeight+data.sys.zOffset+2*addx);
+    sx = r1Width/(data.sys.extendedHeight+data.sys.zOffset+2*addx+payloadCircleDia*5);
     sy = r1Height/(data.tubes[0].od+2*addy);
     
     drawBaseRectangles();
@@ -46,7 +48,8 @@ function drawBaseRectangles() {
 
     drawTubes();
 
-    drawPayload();
+    // drawPayloadCircle();
+    drawPayloadArrow(g, data.sys.totalHeight*sx, 40, data.sys.totalHeight*sx, r1Height/2-15, 10, 'blue');
 }
 
 
@@ -62,7 +65,7 @@ function drawTubes() {
     g.lineWidth = 6;
 
     g.moveTo(sx*(addx+data.sys.extendedHeight),r1Height/2);
-    g.lineTo(sx*(addx+data.sys.extendedHeight+data.sys.zOffset),r1Height/2);
+    g.lineTo(sx*(addx+data.sys.totalHeight),r1Height/2);
     g.stroke();
 
     g.setTransform(1, 0, 0, 1, 0, 0);
@@ -98,11 +101,54 @@ function drawTube(tube) {
     g.setTransform(1, 0, 0, 1, 0, 0);
 }
 
-function drawPayload() {
+function drawPayloadCircle() {
 
     g.beginPath();
     g.fillStyle = "Red";
-    g.arc(data.sys.totalHeight*sx, r1Height/2, 20, 0, 2 * Math.PI);
+    g.arc((addx+data.sys.totalHeight)*sx, r1Height/2, payloadCircleDia, 0, 2 * Math.PI);
     g.fill();
     g.stroke();
+}
+
+
+
+
+
+
+function drawPayloadArrow(ctx, fromx, fromy, tox, toy, arrowWidth, color){
+    //variables to be used when creating the arrow
+    var headlen = 10;
+    var angle = Math.atan2(toy-fromy,tox-fromx);
+ 
+    ctx.save();
+    ctx.strokeStyle = color;
+ 
+    //starting path of the arrow from the start square to the end square
+    //and drawing the stroke
+    ctx.beginPath();
+    ctx.moveTo(fromx, fromy);
+    ctx.lineTo(tox, toy);
+    ctx.lineWidth = arrowWidth;
+    ctx.stroke();
+ 
+    //starting a new path from the head of the arrow to one of the sides of
+    //the point
+    ctx.beginPath();
+    ctx.moveTo(tox, toy);
+    ctx.lineTo(tox-headlen*Math.cos(angle-Math.PI/7),
+               toy-headlen*Math.sin(angle-Math.PI/7));
+ 
+    //path from the side point of the arrow, to the other side point
+    ctx.lineTo(tox-headlen*Math.cos(angle+Math.PI/7),
+               toy-headlen*Math.sin(angle+Math.PI/7));
+ 
+    //path from the side point back to the tip of the arrow, and then
+    //again to the opposite side point
+    ctx.lineTo(tox, toy);
+    ctx.lineTo(tox-headlen*Math.cos(angle-Math.PI/7),
+               toy-headlen*Math.sin(angle-Math.PI/7));
+ 
+    //draws the paths created above
+    ctx.stroke();
+    ctx.restore();
 }
