@@ -379,7 +379,7 @@ function findTrapezoidAreaAndCentroid(tube) {
 
 function getMastConfigurations() {
 
-    let sayac;
+    // let sayac;
     let noSections = 2
 
     let configurations = []
@@ -394,7 +394,7 @@ function getMastConfigurations() {
 
     for (let i = noSections; i <= noOfSections; i++) {
 
-        sayac = 'M'+i+'SECTION'
+        // sayac = 'M'+i+'SECTION'
 
         
         configurations[i] = []
@@ -418,7 +418,6 @@ function getMastConfigurations() {
 
             if (v.length === i) {
                 configurations[i].push([ ...originalData].splice(index,i))  
-
             }
 
             
@@ -435,24 +434,26 @@ function getMastConfigurations() {
 
         let confDizin = []
 
-
         c.forEach((d) => {
 
             let satir = false
+            let sayac = 0
 
             d.forEach((gg) => {
-
                 if (satir) {
                     satir += '-'+gg.od
                 } else {
                     satir = gg.od
                 }
+                sayac++
             })
 
             confDizin.push({
                 "text":satir,
+                "height":"height",
                 "weight":"weight",
-                "deflection":"deflection"
+                "deflection":"deflection",
+                "sayac":sayac
             })
 
 
@@ -469,7 +470,7 @@ function getMastConfigurations() {
         }
     })
 
-    console.log(table)
+    // console.log(table)
 
     addConfRow(table)
 
@@ -487,45 +488,29 @@ function getMastConfigurations() {
 
 function addConfRow(table) {
 
-
-
-    //     <tr>
-    //     <td rowspan="4">2</td>
-    //     <td>sfdsfdf</td>
-    //     <td>sfdsfdf</td>
-    //     <td>sfdsfdf</td>
-    // </tr>
-
-    // <tr>
-    //     <td>sfdsfdf</td>
-    //     <td>sfdsfdf</td>
-    //     <td>sfdsfdf</td>
-    // </tr>
-
-    // <tr>
-    //     <td>sfdsfdf</td>
-    //     <td>sfdsfdf</td>
-    //     <td>sfdsfdf</td>
-    // </tr>
-
-    // console.log("ccccccccc",c)
-
-
     let p = document.getElementById('confBody')
 
-    let tr,tdTitle,tdConf,tdWeight,tdDeflection
+    let tr,tdTitle,tdConf,tdHeight,tdWeight,tdDeflection
 
     table.forEach((row) => {
 
+        // console.log("ROW",row.noOfConf)
+
         row.confs.forEach((r,index) => {
+
+            // console.log("R",r,index)
 
             tr = document.createElement('tr')
 
             if (index < 1) {
+
                 tdTitle = document.createElement('td')
-                tdTitle.rowSpan =row.confs.length
-                tdTitle.innerHTML = 'MST'
+                tdTitle.classList.add('subtitle','has-text-centered','has-text-link')
+                tdTitle.rowSpan =row.noOfConf
+                tdTitle.innerHTML = r.sayac+'-Section <br>Mast<br> Alternatives'
                 tr.appendChild(tdTitle)
+
+                // console.log("Rrrrrr",r,index)
             }
 
             tdConf = document.createElement('td')
@@ -533,19 +518,31 @@ function addConfRow(table) {
 
             tr.appendChild(tdConf)
 
+
+
+            tdHeight = document.createElement('td')
+            tdHeight.innerHTML = r.height
+
+            tr.appendChild(tdHeight)
+
+
+
+
+
             tdWeight = document.createElement('td')
             tdWeight.innerHTML = r.weight
 
             tr.appendChild(tdWeight)
 
-
             tdDeflection = document.createElement('td')
             tdDeflection.innerHTML = r.deflection
 
             tr.appendChild(tdDeflection)
+            p.appendChild(tr)
+
         })
 
-        p.appendChild(tr)
+
 
 
     })
@@ -553,36 +550,6 @@ function addConfRow(table) {
 
 
 
-
-
-
-
-    // c.forEach((d) => {
-    //     let satir = ''
-
-    //     d.forEach((gg) => {
-    //         satir += gg.od+'-'
-    //     })
-    //     console.log("SATIR",satir)
-
-    //     let confTD = document.createElement('td')
-    //     confTD.innerHTML = satir
-
-    //     headTD.appendChild(confTD)
-    
-    //     let wTD = document.createElement('td')
-    //     wTD.innerHTML = 'weight'
-    //     headTD.appendChild(wTD)
-
-    
-    //     let dTD = document.createElement('td')
-    //     dTD.innerHTML ='Deflection'
-
-    //     headTD.appendChild(dTD)
-
-    //     console.log("éoley")
-
-    // })
 
 
 
