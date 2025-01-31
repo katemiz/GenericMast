@@ -59,7 +59,6 @@ function runCalculations() {
 
     console.log("Running function :",arguments.callee.name);
 
-
     getZPositions();
     getArea()
     getRootMoment()
@@ -69,15 +68,9 @@ function runCalculations() {
     getEI()
     getM_EI()
 
-
     getMomentGraphData()
-
     findMEIArea()
-
-
     getMastConfigurations()
-
-
 }
 
 
@@ -323,10 +316,6 @@ function findTrapezoidAreaAndCentroid(tube) {
     v1 = tube.mei[0].mei    // 1/m
     v2 = tube.mei[1].mei    // 1/m
 
-
-
-
-
     x1 = Math.abs(x1)
     x2 = Math.abs(x2)
     v1 = Math.abs(v1)
@@ -335,13 +324,6 @@ function findTrapezoidAreaAndCentroid(tube) {
     let xdist = Math.abs(x1-x2)/1000; // m
     let vdifference = v1-v2           // 1/m
 
-    // console.log('v1',v1)
-    // console.log('v2',v2)
-
-
-    // console.log('x1',x1)
-    // console.log('x2',x2)
-
     let areaTotal = (v1+v2)*xdist/2
 
     // Total area under M/EI diagram
@@ -349,25 +331,14 @@ function findTrapezoidAreaAndCentroid(tube) {
 
     let minV = v1 > v2 ? v2 : v1
 
-    // console.log('minV',minV)
-
-
     let areaSq = minV*xdist
     let areaTri = 0.5*xdist*Math.abs(vdifference)
 
-    // console.log('areaSq',areaSq)
-    // console.log('areaTri',areaTri)
-
-    // x bar calculation
     let xbar
 
     if (vdifference > 0) {
-
-        // console.log('aaaa')
         xbar = (areaSq*xdist*0.5+areaTri*xdist/3)/areaTotal
     } else {
-        // console.log('bbbb')
-
         xbar = (areaSq*xdist*0.5+2*areaTri*xdist/3)/areaTotal
     } 
 
@@ -379,7 +350,6 @@ function findTrapezoidAreaAndCentroid(tube) {
 
 function getMastConfigurations() {
 
-    // let sayac;
     let noSections = 2
 
     let configurations = []
@@ -387,46 +357,21 @@ function getMastConfigurations() {
 
     const originalData = [ ...data.tubes];
 
-    console.log("OriginalData",originalData)
-    console.log("OriginalData Length",originalData.length)
-
-
-
     for (let i = noSections; i <= noOfSections; i++) {
-
-        // sayac = 'M'+i+'SECTION'
-
         
         configurations[i] = []
 
         for (let index = 0; index <= originalData.length-noSections; index++) {
 
-            // const newData = [ ...originalData];
-
-            // console.log("Original array length",originalData.length)
-
-
-            // let v = newData.splice(index,noSections)
-
-            // console.log("replaced array length",v.length)
-
-            // console.log("index,noSe")
-
             let v = [ ...originalData].splice(index,i)
-
-            // console.log()
 
             if (v.length === i) {
                 configurations[i].push([ ...originalData].splice(index,i))  
             }
-
-            
-            
         }
-
     }
 
-    console.log(configurations)
+    // console.log(configurations)
 
     let table = []
 
@@ -434,7 +379,11 @@ function getMastConfigurations() {
 
         let confDizin = []
 
+
         c.forEach((d) => {
+
+            let tubeNumbers = []
+
 
             let satir = false
             let sayac = 0
@@ -446,18 +395,23 @@ function getMastConfigurations() {
                     satir = gg.od
                 }
                 sayac++
+
+                tubeNumbers.push(gg.no)
             })
 
             confDizin.push({
                 "text":satir,
-                "height":"height",
-                "weight":"weight",
+                "heightNested":getConfigNestedHeight(tubeNumbers),
+                "heightExtended":getConfigExtendedHeight(tubeNumbers),
+                "weight":getConfigWeight(tubeNumbers),
                 "deflection":"deflection",
                 "sayac":sayac
             })
 
 
             console.log("SATIR",satir)
+            console.log("tube numbers",tubeNumbers)
+
         })
 
         console.log('----------------------')
@@ -494,11 +448,7 @@ function addConfRow(table) {
 
     table.forEach((row) => {
 
-        // console.log("ROW",row.noOfConf)
-
         row.confs.forEach((r,index) => {
-
-            // console.log("R",r,index)
 
             tr = document.createElement('tr')
 
@@ -507,10 +457,19 @@ function addConfRow(table) {
                 tdTitle = document.createElement('td')
                 tdTitle.classList.add('subtitle','has-text-centered','has-text-link')
                 tdTitle.rowSpan =row.noOfConf
-                tdTitle.innerHTML = r.sayac+'-Section <br>Mast<br> Alternatives'
-                tr.appendChild(tdTitle)
 
-                // console.log("Rrrrrr",r,index)
+                let pH = document.createElement('p')
+                pH.classList.add('title')
+                pH.innerHTML = r.sayac
+                
+                let pT = document.createElement('p')
+                pT.classList.add('is-size-7','has-text-weight-light')
+                pT.innerHTML = 'No Of MastSections'
+
+                tdTitle.appendChild(pH)
+                tdTitle.appendChild(pT)
+
+                tr.appendChild(tdTitle)
             }
 
             tdConf = document.createElement('td')
@@ -518,19 +477,18 @@ function addConfRow(table) {
 
             tr.appendChild(tdConf)
 
+            tdHeightNested = document.createElement('td')
+            tdHeightNested.innerHTML = r.heightNested.toFixed(2)
 
+            tr.appendChild(tdHeightNested)
 
-            tdHeight = document.createElement('td')
-            tdHeight.innerHTML = r.height
+            tdHeightExtended = document.createElement('td')
+            tdHeightExtended.innerHTML = r.heightExtended.toFixed(2)
 
-            tr.appendChild(tdHeight)
-
-
-
-
+            tr.appendChild(tdHeightExtended)
 
             tdWeight = document.createElement('td')
-            tdWeight.innerHTML = r.weight
+            tdWeight.innerHTML = r.weight.toFixed(1)
 
             tr.appendChild(tdWeight)
 
@@ -557,4 +515,104 @@ function addConfRow(table) {
 
 
 
+}
+
+
+
+function getConfigWeight(tubeNumbers) {
+
+
+    let firstTubeNo = tubeNumbers[0];
+    let lastTubeNo = tubeNumbers[tubeNumbers.length-1];
+
+    let sectionWeight,weigthFoot,weightHead,weightTube
+
+    tubeNumbers.forEach((tNo) => {
+
+        let s = data.tubes.filter((tube) => tube.no === tNo)[0]
+
+        if (s.no === firstTubeNo) {
+
+            // First tube
+            weigthFoot = s.wFootRollerAdapter
+            weightTube = s.mass
+            weightHead = s.wHeadRollerAdapter
+
+        } else if (s.no === lastTubeNo) {
+
+            // Last tube
+            weigthFoot = s.wFootFixedAdapter
+            weightTube = s.mass
+            weightHead = s.wPayloadAdapter
+
+        } else {
+
+            weigthFoot = s.wFootFixedAdapter
+            weightTube = s.mass
+            weightHead = s.wHeadRollerAdapter
+        }
+    })
+
+    sectionWeight = weigthFoot+weightTube+weightHead
+
+    console.log("weigthFoot+weightTube+weightHead",weigthFoot,weightTube,weightHead,sectionWeight)
+    console.log("sectionWeight",sectionWeight)
+
+    return sectionWeight
+}
+
+
+
+
+function getConfigNestedHeight(tubeNumbers) {
+
+    let firstTubeNo = tubeNumbers[0];
+    let lastTubeNo = tubeNumbers[tubeNumbers.length-1];
+    let nestedHeight = 0;
+
+    tubeNumbers.forEach((tNo) => {
+
+        let s = data.tubes.filter((tube) => tube.no === tNo)[0]
+
+        if (s.no === firstTubeNo) {
+
+            nestedHeight += s.length + s.hHead
+
+        } else if (s.no === lastTubeNo) {
+
+            nestedHeight += s.pAdapterHeadHeight
+
+        } else {
+            nestedHeight += s.hHead
+        }
+    })
+
+    console.log("nestedHeight",nestedHeight)
+
+    return nestedHeight/1000    // m
+}
+
+
+
+
+
+function getConfigExtendedHeight(tubeNumbers) {
+
+    let firstTubeNo = tubeNumbers[0];
+    let lastTubeNo = tubeNumbers[tubeNumbers.length-1];
+    let extendedHeight = 0;
+
+    let filteredTubes = data.tubes.filter((e) => e.no >= firstTubeNo && e.no <=lastTubeNo)
+
+    filteredTubes.forEach((t) => {
+
+        if (t.no === lastTubeNo) {
+            extendedHeight += t.length
+            extendedHeight += t.pAdapterHeadHeight
+        } else {
+            extendedHeight = t.zD - t.zA;
+        }
+    })
+
+    return extendedHeight/1000
 }
