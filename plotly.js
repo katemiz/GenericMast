@@ -1,35 +1,39 @@
+function drawCharts(){
+  deflectionGraph()
+  meiGraph()
+}
+
+
 function deflectionGraph() {
 
     TESTER = document.getElementById('moment_deflection');
 
-    let xDizin =[]
-    let yDizin =[]
+    let zArray =[0]
+    let deflectionArray =[0]
 
-    data.sys.deflection.forEach((p) => {
-        xDizin.push(p.x)
-        yDizin.push(-p.y)
+    data.tubes.forEach((t) => {
+      zArray.push(t.zF)
+      deflectionArray.push(t.deflectionTop)
     })
 
     var sehim = {
-        x: xDizin,
-        y: yDizin,
+        x: zArray,
+        y: deflectionArray,
         yaxis: 'y2',
 
         mode: 'lines+markers',
         name: 'Deflection, mm'
     };
       
-    let xMoment =[]
-    let yMoment =[]
+    let momentDizin =[-data.sys.mRoot]
 
-    data.sys.mData.forEach((p) => {
-        xMoment.push(p.x)
-        yMoment.push(p.y)
+    data.tubes.forEach((t) => {
+      momentDizin.push(t.mF)
     })
 
     var moment = {
-        x: xMoment,
-        y: yMoment,
+        x: zArray,
+        y: momentDizin,
         fill: 'tozeroy',
         mode: 'lines+markers',
         name: 'Moment, Nm'
@@ -76,19 +80,20 @@ function meiGraph() {
 
     TESTER = document.getElementById('mei');
 
-    let xDizin =[]
-    let yDizin =[]
+    let zArray =[]
+    let meiArray =[]
 
     data.tubes.forEach((tube) => {
-        tube.mei.forEach((p) => {
-            xDizin.push(p.z)
-            yDizin.push(-p.mei)
-        })
+      zArray.push(tube.zBottom)
+      zArray.push(tube.zTop)
+      meiArray.push(tube.meiBottom)
+      meiArray.push(tube.meiTop)
+
     })
 
     var mei_data = {
-        x: xDizin,
-        y: yDizin,
+        x: zArray,
+        y: meiArray,
         fill: 'tozeroy',
         mode: 'lines+markers',
         name: 'M/EI, 1/mm'

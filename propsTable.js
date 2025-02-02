@@ -1,4 +1,4 @@
-function runPropsTable() {
+function renderGeoPropsTable() {
 
     let tableDiv = document.getElementById("propsTable")
 
@@ -23,7 +23,9 @@ function runPropsTable() {
         'E<br>MPa',
         'EI<br>Nmm<sup>2</sup>',
         'M<br>Nm',
-        'M/EI<br>m<sup>-1</sup>'
+        'M/EI <br>(Bottom)<br>m<sup>-1</sup>',
+        'M/EI <br>(Top)<br>m<sup>-1</sup>'
+
     ];
 
     for (let index = 0; index < thData.length; index++) {
@@ -94,10 +96,13 @@ function summary() {
         mom.innerHTML = tube.mA.toFixed(2)+'<br>'+tube.mF.toFixed(2)
 
 
-        let mei= document.createElement('td');
-        mei.classList.add('text-right')
+        let meiB= document.createElement('td');
+        meiB.classList.add('text-right')
+        meiB.innerHTML = tube.meiBottom.toExponential(3)
 
-        mei.innerHTML = tube.mei[0].z.toExponential(3)+'<br>'+tube.mei[0].mei.toExponential(3)
+        let meiT= document.createElement('td');
+        meiT.classList.add('text-right')
+        meiT.innerHTML = tube.meiTop.toExponential(3)
 
         rowEl.appendChild(tubeNo)
         rowEl.appendChild(od)
@@ -110,10 +115,10 @@ function summary() {
         rowEl.appendChild(young)
         rowEl.appendChild(ei)
         rowEl.appendChild(mom)
-        rowEl.appendChild(mei)
+        rowEl.appendChild(meiB)
+        rowEl.appendChild(meiT)
 
         tbody.appendChild(rowEl)
-
     })
 
 }

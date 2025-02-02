@@ -1,9 +1,7 @@
+
 let canvas,g;
 let x0,y0,sx,sy;
 let smy;
-
-let r1Width;
-let r1Height;
 
 let addx = 60;
 let addy = 40;
@@ -13,12 +11,19 @@ let payloadCircleDia = 10
 
 window.addEventListener('resize',() => {
 
-    canvas.width = window.innerWidth*0.9;
-    canvas.height = window.innerWidth*0.25;
+    clearCanvas();
+    drawContent();
 })
 
 
-window.addEventListener('load',() => {
+function drawGeometry() {
+
+    prepareCanvas();
+    drawContent();
+}
+
+
+function prepareCanvas() {
 
     canvas = document.getElementById("graph");
 
@@ -27,29 +32,21 @@ window.addEventListener('load',() => {
     canvas.width = document.getElementById('graphDiv').offsetWidth*0.95;
     canvas.height = 0.3*canvas.width;
 
-    r1Width = canvas.width
-    r1Height = canvas.height
-
-    sx = r1Width/(data.sys.extendedHeight+data.sys.zOffset+2*addx+payloadCircleDia*5);
-    sy = r1Height/(data.tubes[0].od+2*addy);
-    
-    drawBaseRectangles();
-});
+    sx = canvas.width/(data.sys.extendedHeight+data.sys.zOffset+2*addx+payloadCircleDia*5);
+    sy = canvas.height/(data.tubes[0].od+2*addy);    
+}
 
 
-
-function drawBaseRectangles() {
-
-    g.beginPath();
-    g.fillStyle = "White";
-    g.rect(0,0,r1Width,r1Height);
-    g.fill();
-    g.closePath();
+function drawContent() {
 
     drawTubes();
+    drawAuxGeometry();
+    drawPayloadArrow(g, (addx+data.sys.totalHeight)*sx, 40, (addx+data.sys.totalHeight)*sx, canvas.height/2-15, 10, 'blue');
+}
 
-    // drawPayloadCircle();
-    drawPayloadArrow(g, data.sys.totalHeight*sx, 40, data.sys.totalHeight*sx, r1Height/2-15, 10, 'blue');
+
+function clearCanvas() {    
+
 }
 
 
@@ -64,25 +61,11 @@ function drawTubes() {
     g.beginPath();
     g.lineWidth = 6;
 
-    g.moveTo(sx*(addx+data.sys.extendedHeight),r1Height/2);
-    g.lineTo(sx*(addx+data.sys.totalHeight),r1Height/2);
+    g.moveTo(sx*(addx+data.sys.extendedHeight),canvas.height/2);
+    g.lineTo(sx*(addx+data.sys.totalHeight),canvas.height/2);
     g.stroke();
 
     g.setTransform(1, 0, 0, 1, 0, 0);
-
-    // TUBES CENTERLINE
-    g.beginPath();
-    g.lineWidth = 0.2;
-    g.moveTo(addx*sx,r1Height/2);
-    g.lineTo((r1Width-addx*sx),r1Height/2);
-    g.stroke();
-
-    // TUBES COORDINATE AXIS CIRCLE
-    g.beginPath();
-    g.fillStyle = "Red";
-    g.arc(addx*sx, (addy+data.tubes[0].od/2)*sy, 5, 0, 2 * Math.PI);
-    g.fill();
-    g.stroke();
 }
 
 
@@ -99,7 +82,33 @@ function drawTube(tube) {
     g.closePath();
 
     g.setTransform(1, 0, 0, 1, 0, 0);
+
+    g.fillStyle = "Red";
+
+    g.fillText(tube.zA,(addx+tube.zA)*sx,canvas.height-10);
+    g.fillText(tube.zF,(addx+tube.zF)*sx,canvas.height-10);
 }
+
+
+function drawAuxGeometry() {
+
+        // TUBES CENTERLINE
+        g.beginPath();
+        g.lineWidth = 0.2;
+        g.moveTo(addx*sx,canvas.height/2);
+        g.lineTo((canvas.width-addx*sx),canvas.height/2);
+        g.stroke();
+    
+        // TUBES COORDINATE AXIS CIRCLE
+        g.beginPath();
+        g.fillStyle = "Red";
+        g.arc(addx*sx, (addy+data.tubes[0].od/2)*sy, 5, 0, 2 * Math.PI);
+        g.fill();
+        g.stroke();
+
+
+}
+
 
 function drawPayloadCircle() {
 
@@ -111,15 +120,14 @@ function drawPayloadCircle() {
 }
 
 
-
-
-
-
 function drawPayloadArrow(ctx, fromx, fromy, tox, toy, arrowWidth, color){
     //variables to be used when creating the arrow
     var headlen = 10;
     var angle = Math.atan2(toy-fromy,tox-fromx);
- 
+
+    ctx.fillText(data.sys.horLoad+'N',fromx-10,fromy-10);
+    ctx.fillText(data.sys.totalHeight,(addx+data.sys.totalHeight)*sx,canvas.height-10);
+
     ctx.save();
     ctx.strokeStyle = color;
  

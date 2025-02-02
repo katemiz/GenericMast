@@ -1,4 +1,3 @@
-
 let showModal = false
 let maxNoOfSections = 15
 let noOfSections = maxNoOfSections;
@@ -12,6 +11,7 @@ function toggleModal () {
     } else {
         m.classList.add('is-active')
     }
+
     showModal = !showModal
 }
 

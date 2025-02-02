@@ -3,34 +3,21 @@ function runSequence() {
     console.log("Running function :",arguments.callee.name);
 
 
-    // Draw Tubes Geometry
-
-
-
-    // Render Modal
-    renderModalContent()
-
-    // Calculations
+    // Calculations : functions.js
     runCalculations()
 
+    // DrawCanvas : canvas.js
+    drawGeometry()
+
+    // Geometry-Properties Summary Table : propsTable.js
+    renderGeoPropsTable()
+
+    // Render Charts : plotly.js
+    drawCharts()
 
 
-
-    // Render Graph
-    // drawMDiagram()
-
-    // drawMeiChart()
-    // drawDeflectionChart()
-
-    deflectionGraph()
-    meiGraph()
-
-
-    // Set Values
-
-    setValues()
-
-    runPropsTable()
+    // Configurations : confs.js
+    getConfOptions()
 
 }
 

@@ -1,6 +1,49 @@
-function getZPositions() {
+function runCalculations(tubesData = false,overlapsData = false) {
 
-    data.tubes.forEach((tube, index) => {
+    setZPositions(tubesData,overlapsData);
+    setCrossectionalAreas(tubesData)
+    setCrossectionalInertia(tubesData)
+    setMassData(tubesData)
+    setEiData(tubesData)
+
+    setHeightValues(tubesData)
+    setRootMoment()
+    setTubeMoments(tubesData)
+
+    setMomentOverEI(tubesData)
+    setMomentAreaData(tubesData)
+    setXBarData(tubesData)
+
+    setDeflectionData(tubesData)
+
+    // getRootMoment()
+    // getTubeMoments();
+    // getInertia()
+    // getMass()
+    // getEI()
+    // getM_EI()
+
+    // getMomentGraphData()
+    // findMEIArea()
+    // getMastConfigurations()
+
+    console.log("TUBES",data.tubes)
+
+}
+
+
+function setZPositions(tubesData = false,overlapsData = false) {
+
+    if (!tubesData) {
+        tubesData = data.tubes
+    }
+
+
+    if (!overlapsData) {
+        overlapsData = data.overlaps
+    }
+
+    tubesData.forEach((tube, index) => {
 
         if (index < 1 ) {
 
@@ -15,8 +58,8 @@ function getZPositions() {
         } else {
 
             // PREVIOUS TUBE
-            let overlap = data.overlaps[index-1];
-            let pTube = data.tubes[index-1];
+            let overlap = overlapsData[index-1];
+            let pTube = tubesData[index-1];
 
             pTube.zD = pTube.zF-overlap.length;
             pTube.zE = pTube.zF-overlap.length/2;
@@ -31,160 +74,210 @@ function getZPositions() {
             tube.zF = tube.zA+tube.length;
         }
 
-        data.sys.extendedHeight = tube.zF;
+        // data.sys.extendedHeight = tube.zF;
     })
 
+
+    // return tubesData;
+
+    // data.sys.totalHeight = data.sys.extendedHeight+data.sys.zOffset;
+}
+
+
+function setHeightValues(tubesData = false) {
+
+    if (!tubesData) {
+        tubesData = data.tubes
+    }   
+
+    let lastTube = tubesData[tubesData.length-1]
+
+    data.sys.extendedHeight = lastTube.zF
     data.sys.totalHeight = data.sys.extendedHeight+data.sys.zOffset;
 }
 
 
+function setCrossectionalAreas(tubesData = false) {
 
+    if (!tubesData) {
+        tubesData = data.tubes
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function runCalculations() {
-
-    console.log("Running function :",arguments.callee.name);
-
-    getZPositions();
-    getArea()
-    getRootMoment()
-    getTubeMoments();
-    getInertia()
-    getMass()
-    getEI()
-    getM_EI()
-
-    getMomentGraphData()
-    findMEIArea()
-    getMastConfigurations()
-}
-
-
-
-
-
-
-
-
-
-
-function getArea() {
-    data.tubes.forEach((tube) => {
+    tubesData.forEach((tube) => {
         tube.area = Math.PI /4* (Math.pow(tube.od, 2) - Math.pow(tube.od-2*tube.thickness,2)) ; // mm2
         tube.areaM2 = 1E-6*tube.area ; // m2
     })
 } 
 
-function getInertia() {
-    data.tubes.forEach((tube) => {
+
+function setCrossectionalInertia(tubesData = false) {
+
+    if (!tubesData) {
+        tubesData = data.tubes
+    }
+
+    tubesData.forEach((tube) => {
         tube.inertia = Math.PI /32* (Math.pow(tube.od, 4) - Math.pow(tube.od-2*tube.thickness,4)) ; // mm4
         tube.inertiaM4 = 1E-12*tube.inertia; // m4
     })
 } 
 
 
-function getMass() {
-    data.tubes.forEach((tube) => {
+function setMassData(tubesData = false) {
+
+    if (!tubesData) {
+        tubesData = data.tubes
+    }
+
+    tubesData.forEach((tube) => {
         tube.mass = tube.area*tube.length*tube.density/1E9; // kg
     })
 } 
 
 
+function setEiData(tubesData = false) {
 
-function getEI() {
-    data.tubes.forEach((tube) => {
+    if (!tubesData) {
+        tubesData = data.tubes
+    }
+
+    tubesData.forEach((tube) => {
         tube.ei = tube.E*tube.inertia; // Nmm2
         tube.eiNm2 = 1E-3*tube.ei; // Nm2
     })
 } 
 
 
+function setRootMoment() {
 
-
-function getM_EI(){
-
-    let minMax = [];
-
-    let meiA,meiC,meiF;
-
-    data.tubes.forEach((tube, index) => {
-
-        // Tube moments are in Nm
-
-        if(!tube.mei) {
-            tube.mei = []
-        }
-
-        meiA = -tube.mA/tube.eiNm2; // 1/m
-        meiC = -tube.mC/tube.eiNm2; // 1/m
-        meiF = -tube.mF/tube.eiNm2; // 1/m
-
-        if (index === 0){
-            tube.mei.push({"z":tube.zA,"mei":meiA } )    
-            tube.mei.push({"z":tube.zF,"mei":meiF } )  
-            
-            minMax.push(meiA,meiF)
-
-        } else {
-
-            tube.mei.push({"z":tube.zC,"mei":meiC } )    
-            tube.mei.push({"z":tube.zF,"mei":meiF } )  
-
-            minMax.push(meiC,meiF)
-        } 
-
-    } )
-
-    data.sys.meiMin = Math.min(...minMax)
-    data.sys.meiMax =  Math.max(...minMax)
-
-
-
+    data.sys.mRoot = data.sys.horLoad*data.sys.totalHeight; // Nmm
 } 
 
 
+function setTubeMoments(tubesData = false){
 
+    if (!tubesData) {
+        tubesData = data.tubes
+    }
 
-
-
-
-
-
-function getRootMoment() {
-
-    console.log("Running function :",arguments.callee.name);
-
-    data.sys.mRoot = data.sys.horLoad*data.sys.totalHeight/1E3; // Nm
-} 
-
-
-function getTubeMoments(){
-
-    console.log("Running function :",arguments.callee.name);
-
-    data.tubes.forEach((tube) => {
-        tube.mA = data.sys.mRoot*tube.zA/data.sys.totalHeight-data.sys.mRoot; // Nm
-        tube.mB = data.sys.mRoot*tube.zB/data.sys.totalHeight-data.sys.mRoot; // Nm
-        tube.mC = data.sys.mRoot*tube.zC/data.sys.totalHeight-data.sys.mRoot; // Nm
-        tube.mD = data.sys.mRoot*tube.zD/data.sys.totalHeight-data.sys.mRoot; // Nm
-        tube.mE = data.sys.mRoot*tube.zE/data.sys.totalHeight-data.sys.mRoot; // Nm
-        tube.mF = data.sys.mRoot*tube.zF/data.sys.totalHeight-data.sys.mRoot; // Nm
+    tubesData.forEach((tube) => {
+        tube.mA = data.sys.mRoot*tube.zA/data.sys.totalHeight-data.sys.mRoot; // Nmm
+        tube.mB = data.sys.mRoot*tube.zB/data.sys.totalHeight-data.sys.mRoot; // Nmm
+        tube.mC = data.sys.mRoot*tube.zC/data.sys.totalHeight-data.sys.mRoot; // Nmm
+        tube.mD = data.sys.mRoot*tube.zD/data.sys.totalHeight-data.sys.mRoot; // Nmm
+        tube.mE = data.sys.mRoot*tube.zE/data.sys.totalHeight-data.sys.mRoot; // Nmm
+        tube.mF = data.sys.mRoot*tube.zF/data.sys.totalHeight-data.sys.mRoot; // Nmm
     }) 
 } 
+
+
+function setMomentOverEI(tubesData = false){
+
+    if (!tubesData) {
+        tubesData = data.tubes
+    }
+
+    tubesData.forEach((tube,index) => {
+
+        if (index <1) {
+            tube.zBottom = tube.zA
+            tube.meiBottom = tube.mA/tube.ei
+        } else {    
+            tube.zBottom = tube.zC
+            tube.meiBottom = tube.mC/tube.ei
+        }
+
+        tube.zTop = tube.zF
+        tube.meiTop = tube.mF/tube.ei
+    })
+} 
+
+
+
+function setMomentAreaData(tubesData = false){
+
+    if (!tubesData) {
+        tubesData = data.tubes
+    }
+
+    tubesData.forEach((tube) => {
+        tube.momentArea = (tube.zTop-tube.zBottom)*(tube.meiTop+tube.meiBottom)/2;    
+    } )
+} 
+
+
+function setXBarData(tubesData = false){
+
+    if (!tubesData) {
+        tubesData = data.tubes
+    }
+
+    tubesData.forEach((tube) => {
+
+        let width = Math.abs(tube.zTop-tube.zBottom)
+
+        let mB = Math.abs(tube.meiBottom)
+        let mT = Math.abs(tube.meiTop)
+
+        let totalArea = (mB+mT)*width/2
+        let rectArea = mB > mT ? mT*width : mB*width
+        let triArea = Math.abs(mT-mB)*width/2
+
+        let xbar_rectangle = width/2
+        let xbar_triangle = mB > mT ? width/3 : 2*width/3
+
+        // console.log("RECTANGLE",rectArea)
+        // console.log("TRIANGLE",triArea)
+        // console.log("TOTAL",totalArea)
+        // console.log("XBAR RECTANGLE",xbar_rectangle)
+        // console.log("XBAR TRIANGLE",xbar_triangle)
+
+        let xbar = (rectArea*xbar_rectangle+triArea*xbar_triangle)/totalArea
+
+        // console.log("XBAR",xbar)
+
+        tube.zXBar = data.sys.extendedHeight-tube.zBottom-xbar
+
+        console.log("tube.xbar",tube.zXBar)
+    } )
+}
+
+
+function setDeflectionData(tubesData = false){
+
+    if (!tubesData) {
+        tubesData = data.tubes
+    }
+
+    let deflection = 0
+
+    tubesData.forEach((tube) => {   
+
+        tube.deflectionBottom = deflection;   // mm
+
+        deflection += tube.momentArea*tube.zXBar;   // mm
+
+        tube.deflectionTop = deflection;   // mm
+    } )
+
+
+    console.log("DEFLECTION",deflection)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -253,48 +346,7 @@ function orderHeightValues(){
 
 
 
-function findMEIArea(){
 
-
-    let deflection = 0
-    let xbar_rh;
-    let z;
-
-    data.sys.deflection = [{"x":0,"y":0} ] 
-
-
-    data.tubes.forEach((tube,index) => {
-
-        // xbar is centroid from L/H side
-        let xbar_lh = findTrapezoidAreaAndCentroid(tube)
-
-
-        xbar_rh = data.sys.extendedHeight-(tube.zC+xbar_lh)
-        z = tube.zF
-
-        deflection = deflection+tube.areaMEI*xbar_rh*1000;   // mm
-
-        data.sys.deflection.push({
-            "x":z,
-            "y":deflection
-        } )
-
-    } )
-
-    data.sys.maxDeflection = deflection
-
-
-
-
-
-
-
-
-
-
-
-
-} 
 
 
 
@@ -346,90 +398,6 @@ function findTrapezoidAreaAndCentroid(tube) {
 } 
 
 
-
-
-function getMastConfigurations() {
-
-    let noSections = 2
-
-    let configurations = []
-
-
-    const originalData = [ ...data.tubes];
-
-    for (let i = noSections; i <= noOfSections; i++) {
-        
-        configurations[i] = []
-
-        for (let index = 0; index <= originalData.length-noSections; index++) {
-
-            let v = [ ...originalData].splice(index,i)
-
-            if (v.length === i) {
-                configurations[i].push([ ...originalData].splice(index,i))  
-            }
-        }
-    }
-
-    // console.log(configurations)
-
-    let table = []
-
-    configurations.forEach((c) => {
-
-        let confDizin = []
-
-
-        c.forEach((d) => {
-
-            let tubeNumbers = []
-
-
-            let satir = false
-            let sayac = 0
-
-            d.forEach((gg) => {
-                if (satir) {
-                    satir += '-'+gg.od
-                } else {
-                    satir = gg.od
-                }
-                sayac++
-
-                tubeNumbers.push(gg.no)
-            })
-
-            confDizin.push({
-                "text":satir,
-                "heightNested":getConfigNestedHeight(tubeNumbers),
-                "heightExtended":getConfigExtendedHeight(tubeNumbers),
-                "weight":getConfigWeight(tubeNumbers),
-                "deflection":"deflection",
-                "sayac":sayac
-            })
-
-
-            console.log("SATIR",satir)
-            console.log("tube numbers",tubeNumbers)
-
-        })
-
-        console.log('----------------------')
-
-        if (confDizin.length>0) {
-            table.push({
-                "noOfConf":c.length,
-                "confs":confDizin,
-            })
-        }
-    })
-
-    // console.log(table)
-
-    addConfRow(table)
-
-    
-}
 
 
 
@@ -519,100 +487,9 @@ function addConfRow(table) {
 
 
 
-function getConfigWeight(tubeNumbers) {
-
-
-    let firstTubeNo = tubeNumbers[0];
-    let lastTubeNo = tubeNumbers[tubeNumbers.length-1];
-
-    let sectionWeight,weigthFoot,weightHead,weightTube
-
-    tubeNumbers.forEach((tNo) => {
-
-        let s = data.tubes.filter((tube) => tube.no === tNo)[0]
-
-        if (s.no === firstTubeNo) {
-
-            // First tube
-            weigthFoot = s.wFootRollerAdapter
-            weightTube = s.mass
-            weightHead = s.wHeadRollerAdapter
-
-        } else if (s.no === lastTubeNo) {
-
-            // Last tube
-            weigthFoot = s.wFootFixedAdapter
-            weightTube = s.mass
-            weightHead = s.wPayloadAdapter
-
-        } else {
-
-            weigthFoot = s.wFootFixedAdapter
-            weightTube = s.mass
-            weightHead = s.wHeadRollerAdapter
-        }
-    })
-
-    sectionWeight = weigthFoot+weightTube+weightHead
-
-    console.log("weigthFoot+weightTube+weightHead",weigthFoot,weightTube,weightHead,sectionWeight)
-    console.log("sectionWeight",sectionWeight)
-
-    return sectionWeight
-}
-
-
-
-
-function getConfigNestedHeight(tubeNumbers) {
-
-    let firstTubeNo = tubeNumbers[0];
-    let lastTubeNo = tubeNumbers[tubeNumbers.length-1];
-    let nestedHeight = 0;
-
-    tubeNumbers.forEach((tNo) => {
-
-        let s = data.tubes.filter((tube) => tube.no === tNo)[0]
-
-        if (s.no === firstTubeNo) {
-
-            nestedHeight += s.length + s.hHead
-
-        } else if (s.no === lastTubeNo) {
-
-            nestedHeight += s.pAdapterHeadHeight
-
-        } else {
-            nestedHeight += s.hHead
-        }
-    })
-
-    console.log("nestedHeight",nestedHeight)
-
-    return nestedHeight/1000    // m
-}
 
 
 
 
 
-function getConfigExtendedHeight(tubeNumbers) {
 
-    let firstTubeNo = tubeNumbers[0];
-    let lastTubeNo = tubeNumbers[tubeNumbers.length-1];
-    let extendedHeight = 0;
-
-    let filteredTubes = data.tubes.filter((e) => e.no >= firstTubeNo && e.no <=lastTubeNo)
-
-    filteredTubes.forEach((t) => {
-
-        if (t.no === lastTubeNo) {
-            extendedHeight += t.length
-            extendedHeight += t.pAdapterHeadHeight
-        } else {
-            extendedHeight = t.zD - t.zA;
-        }
-    })
-
-    return extendedHeight/1000
-}
