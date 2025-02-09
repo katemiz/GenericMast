@@ -9,7 +9,9 @@ function getConfOptions() {
 
 function getMastConfigurations() {
 
-    return true
+    //return true
+
+    console.log('orgBackupData',orgBackupData)
 
     let noSections = 2
     let configurations = []

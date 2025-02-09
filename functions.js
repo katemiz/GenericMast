@@ -234,36 +234,54 @@ function setXBarData(tubesData = false){
 
         let xbar = (rectArea*xbar_rectangle+triArea*xbar_triangle)/totalArea
 
-        // console.log("XBAR",xbar)
+        console.log("XBAR",xbar)
 
-        tube.zXBar = data.sys.extendedHeight-tube.zBottom-xbar
+        tube.zXBar =tube.zBottom+xbar
 
         console.log("tube.xbar",tube.zXBar)
     } )
 }
 
 
-function setDeflectionData(tubesData = false){
+function setDeflectionData(){
 
-    if (!tubesData) {
-        tubesData = data.tubes
+    let tubesData = [...data.tubes]
+
+    let sayac = tubesData.length
+
+    let deflectionTop;
+
+    for (let i = sayac; i >= 1; i--) {
+
+        deflectionTop = CalculateDeflection(tubesData)
+
+        tubesData.pop()
+
+        data.tubes[i-1].deflectionTop = deflectionTop
+
+        console.log("sayac,index, ",sayac,i-1)
     }
+}
+
+
+
+function CalculateDeflection(dizin) {
+
+    let momentArmLocation = dizin[dizin.length-1].zTop
 
     let deflection = 0
 
-    tubesData.forEach((tube) => {   
+    dizin.forEach((t) => {
+        deflection = deflection+t.momentArea*(momentArmLocation-t.zXBar)
+    })
 
-        tube.deflectionBottom = deflection;   // mm
+    console.log("DEFLECTON",deflection)
 
-        deflection += tube.momentArea*tube.zXBar;   // mm
-
-        tube.deflectionTop = deflection;   // mm
-    } )
+    return deflection
 
 
-    console.log("DEFLECTION",deflection)
+
 }
-
 
 
 
