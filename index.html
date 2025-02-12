@@ -20,10 +20,17 @@
     <script src="../confs.js"></script>
 
 
+    <script src="../DeflectionClass.js"></script>
+
+
+
 
     <script>
         window.onload = function() {
             runSequence()
+
+            let mainBeam = new BeamDeflection(data)
+            mainBeam.run()
         };
 
         function refreshCalcs() {
