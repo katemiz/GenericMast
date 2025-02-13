@@ -17,7 +17,7 @@ function runSequence() {
 
 
     // Configurations : confs.js
-    getConfOptions()
+    //getConfOptions()
 
 }
 

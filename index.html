@@ -27,9 +27,12 @@
 
     <script>
         window.onload = function() {
+
+          let clone = structuredClone(data);
+
             runSequence()
 
-            let mainBeam = new BeamDeflection(data)
+            let mainBeam = new BeamDeflection(clone)
             mainBeam.run()
         };
 
