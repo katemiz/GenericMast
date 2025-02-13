@@ -13,24 +13,9 @@ class BeamDeflection {
 
         this.setZPositions();
         this.setGeometricValues();
-        // setMassData(tubesData)
-        // setEiData(tubesData)
+        this.calculateDeflection();
     
-        // setHeightValues(tubesData)
-        // setRootMoment()
-        // setTubeMoments(tubesData)
-    
-        // setMomentOverEI(tubesData)
-        // setMomentAreaData(tubesData)
-        // setXBarData(tubesData)
-    
-        // setDeflectionData(tubesData)
-
-
         console.log('CLASS TUBEs',this.tubes)
-
-
-
     }
   
 
@@ -75,21 +60,13 @@ class BeamDeflection {
                 tube.zF = tube.zA+tube.length;
             }
         })
-    }
 
-
-    setHeightValues() {
-
-        if (!this.tubes) {
-            alert("No tubes definition found")
-        }
-    
+        // EXTENDED AND TOTAL HEIGHT
         let lastTube = this.tubes[this.tubes.length-1]
     
         this.sys.extendedHeight = lastTube.zF
         this.sys.totalHeight = this.sys.extendedHeight+this.sys.zOffset;
     }
-
 
 
     setGeometricValues() {
@@ -100,7 +77,7 @@ class BeamDeflection {
 
         let areaObject,inertiaObject,eiObject
     
-        this.tubes.forEach((tube) => {
+        this.tubes.forEach((tube,index) => {
 
             // AREA
             areaObject = this.calculateArea(tube)
@@ -123,9 +100,20 @@ class BeamDeflection {
             tube.ei = eiObject.ei
             tube.eiNm2 = eiObject.eiNm2
 
+            // TUBE MOMENTS
+            this.calculateRootMoment();
+            this.calculateTubeMoments(tube);
+
+            // TUBE M/EI VALUES
+            this.calculateTubeM_EI(tube,index);
+
+            // TUBE MOMENT - AREA
+            this.calculateMomentArea(tube);
+
+            // TUBE x bar VALUE
+            this.calculateTubeXBar(tube);
         })
     }
-
 
 
     calculateArea(tube) {
@@ -173,5 +161,88 @@ class BeamDeflection {
     } 
 
 
+    calculateRootMoment() {
+        this.sys.mRootNmm = this.sys.horLoad*this.sys.totalHeight; // Nmm
+        this.sys.mRootNm = this.sys.mRootNmm/1000; // Nm
+    } 
+
+
+    calculateTubeMoments(tube){
     
+        tube.mA = this.sys.mRootNmm*tube.zA/this.sys.totalHeight-this.sys.mRootNmm; // Nmm
+        tube.mB = this.sys.mRootNmm*tube.zB/this.sys.totalHeight-this.sys.mRootNmm; // Nmm
+        tube.mC = this.sys.mRootNmm*tube.zC/this.sys.totalHeight-this.sys.mRootNmm; // Nmm
+        tube.mD = this.sys.mRootNmm*tube.zD/this.sys.totalHeight-this.sys.mRootNmm; // Nmm
+        tube.mE = this.sys.mRootNmm*tube.zE/this.sys.totalHeight-this.sys.mRootNmm; // Nmm
+        tube.mF = this.sys.mRootNmm*tube.zF/this.sys.totalHeight-this.sys.mRootNmm; // Nmm
+    } 
+    
+
+    calculateTubeM_EI(tube,index){
+
+        if (index <1) {
+            tube.zBottom = tube.zA
+            tube.meiBottom = tube.mA/tube.ei
+        } else {    
+            tube.zBottom = tube.zC
+            tube.meiBottom = tube.mC/tube.ei
+        }
+
+        tube.zTop = tube.zF
+        tube.meiTop = tube.mF/tube.ei
+    } 
+
+    calculateMomentArea(tube){
+        tube.momentArea = (tube.zTop-tube.zBottom)*(tube.meiTop+tube.meiBottom)/2;    
+    } 
+    
+
+    calculateTubeXBar(tube){
+    
+        let width = Math.abs(tube.zTop-tube.zBottom)
+
+        let mB = Math.abs(tube.meiBottom)
+        let mT = Math.abs(tube.meiTop)
+
+        let totalArea = (mB+mT)*width/2
+        let rectArea = mB > mT ? mT*width : mB*width
+        let triArea = Math.abs(mT-mB)*width/2
+
+        let xbar_rectangle = width/2
+        let xbar_triangle = mB > mT ? width/3 : 2*width/3
+
+        let xbar = (rectArea*xbar_rectangle+triArea*xbar_triangle)/totalArea
+
+        tube.zXBar =tube.zBottom+xbar
+    }
+    
+
+    CalculateSubSystemDeflection(subTubesArray) {
+
+        let momentArmLocation = subTubesArray[subTubesArray.length-1].zTop
+    
+        let deflection = 0
+    
+        subTubesArray.forEach((t) => {
+            deflection = deflection+t.momentArea*(momentArmLocation-t.zXBar)
+        })
+        
+        return deflection
+    }
+
+
+    calculateDeflection(){
+
+        let tubesCloned = structuredClone(this.tubes);
+        let sayac = tubesCloned.length
+        let deflectionTop;
+    
+        for (let i = sayac; i >= 1; i--) {
+    
+            deflectionTop = CalculateDeflection(tubesCloned)
+            tubesCloned.pop()
+    
+            this.tubes[i-1].deflectionTop = deflectionTop
+        }
+    }    
 }
