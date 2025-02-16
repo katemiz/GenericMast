@@ -239,7 +239,7 @@ class BeamDeflection {
     
         for (let i = sayac; i >= 1; i--) {
     
-            deflectionTop = CalculateDeflection(tubesCloned)
+            deflectionTop = this.CalculateSubSystemDeflection(tubesCloned)
             tubesCloned.pop()
     
             this.tubes[i-1].deflectionTop = deflectionTop

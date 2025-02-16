@@ -4,20 +4,54 @@ function runSequence() {
 
 
     // Calculations : functions.js
-    runCalculations()
+    // runCalculations()
 
-    // DrawCanvas : canvas.js
-    drawGeometry()
+
 
     // Geometry-Properties Summary Table : propsTable.js
-    renderGeoPropsTable()
+    //renderGeoPropsTable()
 
     // Render Charts : plotly.js
-    drawCharts()
+    //drawCharts()
 
 
     // Configurations : confs.js
     //getConfOptions()
+
+
+    let newData = new DataIntegrityClass(data)
+
+    data = newData.data
+
+
+
+    let clone = structuredClone(data);
+    let clone2 = structuredClone(data);
+
+
+    let mainBeam = new BeamDeflection(clone)
+    mainBeam.run()
+
+
+    let figure = new CanvasClass(clone2)
+    figure.run()
+
+
+    let tablo = new PropsTable(mainBeam.data);
+    tablo.renderGeoPropsTable()
+
+
+    let chart = new ChartClass(mainBeam.data);
+    chart.deflectionGraph();
+    chart.meiGraph();
+
+
+    let clone3 = structuredClone(mainBeam.data);
+
+    let configurations = new ConfigurationClass(clone3);
+    configurations.getMastConfigurations()
+
+
 
 }
 

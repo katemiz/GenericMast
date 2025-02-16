@@ -32,6 +32,9 @@ function prepareCanvas() {
     canvas.width = document.getElementById('graphDiv').offsetWidth*0.95;
     canvas.height = 0.3*canvas.width;
 
+    console.log('canvas Dims',canvas.width,canvas.height)
+
+
     sx = canvas.width/(data.sys.extendedHeight+data.sys.zOffset+2*addx+payloadCircleDia*5);
     sy = canvas.height/(data.tubes[0].od+2*addy);    
 }

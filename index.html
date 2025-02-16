@@ -13,14 +13,19 @@
 
     <script src="../data.js"></script>
     <script src="../modal.js"></script>
-    <script src="../functions.js"></script>
+    <!-- <script src="../functions.js"></script> -->
     <script src="../propsTable.js"></script>
     <script src="../index.js"></script>
-    <script src="../plotly.js"></script>
-    <script src="../confs.js"></script>
+    <script src="../ChartClass.js"></script>
 
 
     <script src="../DeflectionClass.js"></script>
+    <script src="../CanvasClass.js"></script>
+    <script src="../DataIntegrityClass.js"></script>
+    <script src="../ConfigurationClass.js"></script>
+
+
+
 
 
 
@@ -28,12 +33,11 @@
     <script>
         window.onload = function() {
 
-          let clone = structuredClone(data);
 
-            runSequence()
 
-            let mainBeam = new BeamDeflection(clone)
-            mainBeam.run()
+          runSequence()
+
+
         };
 
         function refreshCalcs() {
@@ -55,9 +59,11 @@
 
         <button class="button is-dark" onclick="toggleModal()">Edit Mast Parameters</button>
 
-        <div class="card my-4 has-text-centered" id="graphDiv">
-            <canvas id="graph"></canvas>
+
+        <div class="card my-4 has-text-centered" id="figDiv">
+          <canvas id="figCanvas"></canvas>
         </div>
+
 
 
 
@@ -187,7 +193,6 @@
 
     </section>
 
-    <script src="../canvas.js"></script>
 
     
 </body>

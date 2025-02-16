@@ -1,88 +1,108 @@
 
 
-function getConfOptions() {
-
-    getMastConfigurations()
-
-}
+class ConfigurationClass {
 
 
-function getMastConfigurations() {
+    constructor(data) {
 
-    //return true
-
-    console.log('orgBackupData',orgBackupData)
-
-    let noSections = 2
-    let configurations = []
-
-    const originalData = [ ...data.tubes];
-
-    for (let i = noSections; i <= noOfSections; i++) {
+        // Data
+        this.tubes = data.tubes;
+        this.sys = data.sys;
+        this.overlaps = data.overlaps;
         
-        configurations[i] = []
-
-        for (let index = 0; index <= originalData.length-noSections; index++) {
-
-            let v = [ ...originalData].splice(index,i)
-
-            if (v.length === i) {
-                configurations[i].push([ ...originalData].splice(index,i))  
-            }
-        }
     }
 
-    let table = []
 
-    configurations.forEach((c) => {
-
-        let confDizin = []
-
-        c.forEach((d) => {
-
-            let tubeNumbers = []
-            let satir = false
-            let sayac = 0
-
-            d.forEach((gg) => {
-                if (satir) {
-                    satir += '-'+gg.od
-                } else {
-                    satir = gg.od
+    getMastConfigurations() {
+    
+        let noSections = 2
+        let configurations = []
+    
+    
+        for (let i = noSections; i <= this.tubes.length; i++) {
+            
+            configurations[i] = []
+    
+            for (let index = 0; index <= this.tubes.length-noSections; index++) {
+    
+                let v = this.tubes.splice(index,i)
+    
+                if (v.length === i) {
+                    configurations[i].push(this.tubes.splice(index,i))  
                 }
-                sayac++
-
-                tubeNumbers.push(gg.no)
-            })
-
-            confDizin.push({
-                "text":satir,
-                "heightNested":getConfigNestedHeight(tubeNumbers),
-                "heightExtended":getConfigExtendedHeight(tubeNumbers),
-                "weight":getConfigWeight(tubeNumbers),
-                "deflection":getConfigDeflection(tubeNumbers),
-                "sayac":sayac
-            })
-
-            data.tubes = originalData.tubes
-            data.overlaps = originalData.overlaps
-
-            console.log("SATIR",satir)
-            console.log("tube numbers",tubeNumbers)
-        })
-
-        console.log('----------------------')
-
-        if (confDizin.length>0) {
-            table.push({
-                "noOfConf":c.length,
-                "confs":confDizin,
-            })
+            }
         }
-    })
+    
+        let table = []
+    
+        configurations.forEach((c) => {
+    
+            let confDizin = []
+    
+            c.forEach((d) => {
+    
+                let tubeNumbers = []
+                let satir = false
+                let sayac = 0
+    
+                d.forEach((gg) => {
+                    if (satir) {
+                        satir += '-'+gg.od
+                    } else {
+                        satir = gg.od
+                    }
+                    sayac++
+    
+                    tubeNumbers.push(gg.no)
+                })
+    
+                confDizin.push({
+                    "text":satir,
+                    "heightNested":getConfigNestedHeight(tubeNumbers),
+                    "heightExtended":getConfigExtendedHeight(tubeNumbers),
+                    "weight":getConfigWeight(tubeNumbers),
+                    "deflection":getConfigDeflection(tubeNumbers),
+                    "sayac":sayac
+                })
+    
+                // data.tubes = originalData.tubes
+                // data.overlaps = originalData.overlaps
+    
+                console.log("SATIR",satir)
+                console.log("tube numbers",tubeNumbers)
+            })
+    
+            console.log('----------------------')
+    
+            if (confDizin.length>0) {
+                table.push({
+                    "noOfConf":c.length,
+                    "confs":confDizin,
+                })
+            }
+        })
+    
+        //addConfRow(table)
+    }
 
-    addConfRow(table)
+
+
+
+
+
+
+
+
+
+
 }
+
+
+
+
+
+
+
 
 
 function getConfigNestedHeight(tubeNumbers) {
@@ -196,7 +216,7 @@ function getConfigDeflection(tubeNumbers) {
     data.overlaps = overlapsData
     console.log("tubesData",tubesData)
 
-    runCalculations()
+    //runCalculations()
 
     let lastTubeNo = data.tubes[data.tubes.length-1];
 

@@ -1,17 +1,23 @@
-function drawCharts(){
-  deflectionGraph()
-  meiGraph()
-}
+class ChartClass {
+
+  constructor(data) {
+
+    // Data
+    this.tubes = data.tubes;
+    this.sys = data.sys;
+    this.overlaps = data.overlaps;
+  }
 
 
-function deflectionGraph() {
 
-    TESTER = document.getElementById('moment_deflection');
+  deflectionGraph() {
+
+    let TESTER = document.getElementById('moment_deflection');
 
     let zArray =[0]
     let deflectionArray =[0]
 
-    data.tubes.forEach((t) => {
+    this.tubes.forEach((t) => {
       zArray.push(t.zF)
       deflectionArray.push(t.deflectionTop)
     })
@@ -20,14 +26,13 @@ function deflectionGraph() {
         x: zArray,
         y: deflectionArray,
         yaxis: 'y2',
-
         mode: 'lines+markers',
         name: 'Deflection, mm'
     };
       
-    let momentDizin =[-data.sys.mRoot]
+    let momentDizin =[-this.sys.mRootNmm]
 
-    data.tubes.forEach((t) => {
+    this.tubes.forEach((t) => {
       momentDizin.push(t.mF)
     })
 
@@ -36,7 +41,7 @@ function deflectionGraph() {
         y: momentDizin,
         fill: 'tozeroy',
         mode: 'lines+markers',
-        name: 'Moment, Nm'
+        name: 'Moment, Nmm'
     };
 
     var veri = [sehim,moment];
@@ -54,7 +59,7 @@ function deflectionGraph() {
       
         yaxis: {
           title: {
-            text: 'Moment, Nm'
+            text: 'Moment, Nmm'
           }
         },
 
@@ -73,17 +78,17 @@ function deflectionGraph() {
     };
 
     Plotly.newPlot(TESTER, veri, layout);
-}
+  }
 
 
-function meiGraph() {
+  meiGraph() {
 
-    TESTER = document.getElementById('mei');
+    let TESTER = document.getElementById('mei');
 
     let zArray =[]
     let meiArray =[]
 
-    data.tubes.forEach((tube) => {
+    this.tubes.forEach((tube) => {
       zArray.push(tube.zBottom)
       zArray.push(tube.zTop)
       meiArray.push(tube.meiBottom)
@@ -129,4 +134,7 @@ function meiGraph() {
     };
 
     Plotly.newPlot(TESTER, veri, layout);
+
+    console.log('CCCCHARTS',this.tubes,this.sys)
+  }
 }
