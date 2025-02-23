@@ -13,36 +13,19 @@
 
     <script src="../data.js"></script>
     <script src="../modal.js"></script>
-    <!-- <script src="../functions.js"></script> -->
     <script src="../propsTable.js"></script>
     <script src="../index.js"></script>
     <script src="../ChartClass.js"></script>
-
 
     <script src="../DeflectionClass.js"></script>
     <script src="../CanvasClass.js"></script>
     <script src="../DataIntegrityClass.js"></script>
     <script src="../ConfigurationClass.js"></script>
 
-
-
-
-
-
-
     <script>
         window.onload = function() {
-
-
-
           runSequence()
-
-
         };
-
-        function refreshCalcs() {
-            toggleModal()
-        }
     </script>
 
 </head>
@@ -50,148 +33,167 @@
 
 <body class="container has-background-white-ter">
 
-      <section class="section ">
+  <section class="section ">
 
-        <h1 class="title is-size-1 ">Telescopic Mast Structure</h1>
-        <h2 class="subtitle">
-          Bending Moment and Deflection Calculation for Variable Section Mast Structures
-        </h2>
+    <h1 class="title is-size-1 ">Telescopic Mast Structure</h1>
 
-        <button class="button is-dark" onclick="toggleModal()">Edit Mast Parameters</button>
+    <h2 class="subtitle">
+      Bending Moment and Deflection Calculation for Variable Section Mast Structures
+    </h2>
 
-
-        <div class="card my-4 has-text-centered" id="figDiv">
-          <canvas id="figCanvas"></canvas>
-        </div>
+    <button class="button is-dark" onclick="toggleModal(false)">Edit Mast Parameters</button>
 
 
+    <div class="card my-4 has-text-centered" id="figDiv">
+      <canvas id="figCanvas"></canvas>
+    </div>
+
+
+    <!-- SUMMARY TABLE -->
+    <div id="summaryTable" class="card my-4 p-8">
+      <!-- propsTable.js -->
+      <!-- Content Populated by summaryTable() -->
+    </div>
+
+
+    <!-- TABLE: TUBE GEOMETRY AND PARAMS -->
+    <div id="propsTable">
+        <!-- propsTable.js -->
+        <!-- Content Populated by propsTable() -->
+    </div>
+
+
+
+    <div id="moment_deflection" class="card my-4 p-8"></div>
+    <div id="mei" class="card my-4 p-8"></div>
+
+    <div id="configurations" class="card my-4 p-8">
+
+        <table class="table is-fullwidth">
+
+            <caption>Mast Configurations By Section Number</caption>
+
+            <thead>
+              <tr>
+                <th>Section Number</th>
+                <th>Tube Diameters</th>
+                <th>Nested Height (m)</th>
+                <th>Extended Height (m)</th>
+                <th>Mast Sections Weight (kg)</th>
+                <th>Mast Tip Deflection (mm)</th>
+              </tr>
+            </thead>
+
+            <tbody id="confBody">
+                <!-- functions.js -->
+                <!-- Content Populated by getMastConfigurations() -->
+            </tbody>
+
+        </table>
+    </div>
 
 
 
 
-        <!-- TABLE: TUBE GEOMETRY AND PARAMS -->
-        <div id="propsTable">
-            <!-- propsTable.js -->
-            <!-- Content Populated by propsTable() -->
-        </div>
 
-        <div class="modal" id="modal">
-            <div class="modal-background" onclick="toggleModal()"></div>
-            <div class="modal-card">
 
-              <header class="modal-card-head">
-                <p class="modal-card-title">Mast Dimensions and Parameters</p>
-                <button class="delete" aria-label="close" onclick="toggleModal()"></button>
-              </header>
 
-              <section class="modal-card-body">
-                <!-- Content ... -->
-                <div class="columns">
 
-                    <div class="column field">
-                      <label class="label">No of Sections?</label>
-                      <div class="control">
-                        <span class="select">
-                          <select id="getNoOfSections" onchange="getNoOfSections()">
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                              <option value="4">4</option>                                
-                              <option value="5">5</option>
-                              <option value="6">6</option>
-                              <option value="7">7</option>
-                              <option value="8">8</option>                                
-                              <option value="9">9</option>
-                              <option value="10">10</option>
-                              <option value="11">11</option>
-                              <option value="12">12</option>                                
-                              <option value="13">13</option>
-                              <option value="14">14</option>
-                              <option value="15" selected="selected">15</option>
-                          </select>
-                        </span>
-                      </div>
-                      <p class="help">Total no of sections?</p>
-                    </div>
 
-                    <div class="column field">
-                      <label class="label">Z-Offset</label>
-                      <div class="control">
-                        <input class="input" type="text" placeholder="mm" id="zOffset" onchange="updateValues()">
-                      </div>
-                      <p class="help">Distance between payload COG and mast top face</p>
-                    </div>
 
-                    <div class="column field">
-                      <label class="label">Load</label>
-                      <div class="control">
-                        <input class="input" type="text" placeholder="N" id="horLoad">
-                      </div>
-                      <p class="help">Horizontal load acting on payload (N)</p>
-                    </div>
 
+
+
+    <!-- MODAL -->
+
+    <div class="modal" id="modal">
+      <div class="modal-background" onclick="toggleModal()"></div>
+      <div class="modal-card">
+
+        <header class="modal-card-head">
+          <p class="modal-card-title">Mast Dimensions and Parameters</p>
+          <button class="delete" aria-label="close" onclick="toggleModal()"></button>
+        </header>
+
+        <section class="modal-card-body">
+          <!-- Content ... -->
+          <div class="columns">
+
+              <div class="column field">
+                <label class="label">No of Sections?</label>
+                <div class="control">
+                  <span class="select">
+                    <select id="getNoOfSections" onchange="getNoOfSections()">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>                                
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>                                
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>                                
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15" selected="selected">15</option>
+                    </select>
+                  </span>
                 </div>
+                <p class="help">Total no of sections?</p>
+              </div>
 
-                <div id="mst">
-                  <!-- modal.js -->
-                  <!-- Content Populated by runInputTable() -->
+              <div class="column field">
+                <label class="label">Z-Offset</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="mm" id="zOffset" onchange="updateValues()">
                 </div>
-            
-              </section>
+                <p class="help">Distance between payload COG and mast top face</p>
+              </div>
 
-              <footer class="modal-card-foot">
-                <div class="buttons">
-                  <button class="button is-success">Continue</button>
-                  <button class="button" onclick="toggleModal()">Cancel</button>
+              <div class="column field">
+                <label class="label">Load</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="N" id="horLoad">
                 </div>
-              </footer>
-            </div>
-        </div>
+                <p class="help">Horizontal load acting on payload (N)</p>
+              </div>
 
-        <div id="moment_deflection" class="card my-4 p-8"></div>
-        <div id="mei" class="card my-4 p-8"></div>
+          </div>
 
-        <div id="configurations" class="card my-4 p-8">
+          <div id="mst">
+            <!-- modal.js -->
+            <!-- Content Populated by runInputTable() -->
+          </div>
+      
+        </section>
 
-            <table class="table is-fullwidth">
-
-                <caption>Mast Configurations By Section Number</caption>
-
-                <thead>
-                  <tr>
-                    <th>Section Number</th>
-                    <th>Tube Diameters</th>
-                    <th>Nested Height (m)</th>
-                    <th>Extended Height (m)</th>
-                    <th>Mast Sections Weight (kg)</th>
-                    <th>Mast Tip Deflection (mm)</th>
-                  </tr>
-                </thead>
-
-                <tbody id="confBody">
-                    <!-- functions.js -->
-                    <!-- Content Populated by getMastConfigurations() -->
-                </tbody>
-
-            </table>
-        </div>
-
-
-
-
-
-
-
-
-
-
+        <footer class="modal-card-foot">
+          <div class="buttons">
+            <button class="button is-success">Continue</button>
+            <button class="button" onclick="toggleModal()">Cancel</button>
+          </div>
+        </footer>
       </div>
+    </div>
 
 
 
 
 
-    </section>
+
+
+
+
+
+
+
+
+
+
+  </section>
 
 
     

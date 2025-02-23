@@ -3,70 +3,17 @@ class BeamDeflection {
     constructor(data) {
       this.data = data;
       this.tubes = data.tubes
-      this.overlaps = data.overlaps
       this.sys = data.sys
     }
 
     run() {
 
-        console.log('Started to run')
-
-        this.setZPositions();
         this.setGeometricValues();
         this.calculateDeflection();
-    
-        console.log('CLASS TUBEs',this.tubes)
     }
   
 
-    setZPositions() {
 
-        if (!this.tubes) {
-            alert("No tubes definition found")
-        }
-    
-        if (!this.overlaps) {
-            alert("No data.overlapsData definition found")
-        }
-    
-        this.tubes.forEach((tube, index) => {
-    
-            if (index < 1 ) {
-    
-                tube.zA = 0;
-                tube.zB = 0;
-                tube.zC = 0;
-    
-                tube.zD = tube.length;
-                tube.zE = tube.length;
-                tube.zF = tube.length;
-    
-            } else {
-    
-                // PREVIOUS TUBE
-                let overlap = this.overlaps[index-1];
-                let pTube = this.tubes[index-1];
-    
-                pTube.zD = pTube.zF-overlap.length;
-                pTube.zE = pTube.zF-overlap.length/2;
-    
-                // CURRENT TUBE
-                tube.zA = pTube.zD;
-                tube.zB = pTube.zE;
-                tube.zC = pTube.zF;
-    
-                tube.zD = tube.zA+tube.length;
-                tube.zE = tube.zA+tube.length;
-                tube.zF = tube.zA+tube.length;
-            }
-        })
-
-        // EXTENDED AND TOTAL HEIGHT
-        let lastTube = this.tubes[this.tubes.length-1]
-    
-        this.sys.extendedHeight = lastTube.zF
-        this.sys.totalHeight = this.sys.extendedHeight+this.sys.zOffset;
-    }
 
 
     setGeometricValues() {
@@ -181,14 +128,11 @@ class BeamDeflection {
     calculateTubeM_EI(tube,index){
 
         if (index <1) {
-            tube.zBottom = tube.zA
             tube.meiBottom = tube.mA/tube.ei
         } else {    
-            tube.zBottom = tube.zC
             tube.meiBottom = tube.mC/tube.ei
         }
 
-        tube.zTop = tube.zF
         tube.meiTop = tube.mF/tube.ei
     } 
 

@@ -8,7 +8,7 @@ class ConfigurationClass {
         // Data
         this.tubes = data.tubes;
         this.sys = data.sys;
-        this.overlaps = data.overlaps;
+        this.limits = data.limits;
         
     }
 
@@ -64,9 +64,7 @@ class ConfigurationClass {
                     "deflection":getConfigDeflection(tubeNumbers),
                     "sayac":sayac
                 })
-    
-                // data.tubes = originalData.tubes
-                // data.overlaps = originalData.overlaps
+
     
                 console.log("SATIR",satir)
                 console.log("tube numbers",tubeNumbers)
@@ -199,21 +197,21 @@ function getConfigWeight(tubeNumbers) {
 function getConfigDeflection(tubeNumbers) {
 
     let tubesData = []
-    let overlapsData = []
+    let limitsData = []
 
     tubeNumbers.forEach((tNo) => {
 
         let s = data.tubes.filter((tube) => tube.no === tNo)[0]
-        let overlap = data.overlaps.filter((ol) => ol.no === s.no)[0]
+        let limit = data.limits.filter((ol) => ol.no === s.no)[0]
 
         console.log("s",s)
 
         tubesData.push(s)
-        overlapsData.push(overlap)
+        limitsData.push(limit)
     })
 
     data.tubes = tubesData
-    data.overlaps = overlapsData
+    data.limits = limitsData
     console.log("tubesData",tubesData)
 
     //runCalculations()

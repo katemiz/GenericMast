@@ -89,7 +89,7 @@ class ChartClass {
     let meiArray =[]
 
     this.tubes.forEach((tube) => {
-      zArray.push(tube.zBottom)
+      zArray.push(tube.zC)
       zArray.push(tube.zTop)
       meiArray.push(tube.meiBottom)
       meiArray.push(tube.meiTop)
@@ -128,13 +128,12 @@ class ChartClass {
 
         legend: {
           x: 1,
-          xanchor: 'right',
+          // xanchor: 'right',
           y: 1
         }
     };
 
     Plotly.newPlot(TESTER, veri, layout);
 
-    console.log('CCCCHARTS',this.tubes,this.sys)
   }
 }

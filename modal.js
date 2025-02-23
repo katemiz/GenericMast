@@ -2,9 +2,18 @@ let showModal = false
 let maxNoOfSections = 15
 let noOfSections = maxNoOfSections;
 
-function toggleModal () {
+function toggleModal (index = false) {
 
-    let m = document.getElementById('modal')
+    let m;
+
+    if ( Number.isInteger(index)) {
+
+        m = document.getElementById('modal'+index)
+
+    } else {
+
+        m = document.getElementById('modal')
+    }
 
     if (showModal) {
         m.classList.remove('is-active')

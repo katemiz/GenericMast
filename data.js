@@ -98,33 +98,28 @@ let data = {
 
     ],
 
-    "overlaps": [
+    "limits": [
         {
             "no":1,
-            "length": 400,
+            "overlap": 400,
+            "extension":200,
         },
         {
             "no":2,
-            "length": 400,
+            "overlap": 400,
+            "extension":200,
         },
         {
             "no":3,
+            "overlap": 400,
+            "extension":200,
 
-            "length": 400,
         },
         {
             "no":4,
-            "length": 400,
+            "overlap": 400,
+            "extension":200,
         },
-        // {
-        //      "no":5,
-        //     "length": 1400,
-        // },
-
-        
-
-
-
     ],    
 
 

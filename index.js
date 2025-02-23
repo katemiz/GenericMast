@@ -1,52 +1,32 @@
 function runSequence() {
 
-    console.log("Running function :",arguments.callee.name);
-
-
-    // Calculations : functions.js
-    // runCalculations()
-
-
-
-    // Geometry-Properties Summary Table : propsTable.js
-    //renderGeoPropsTable()
-
-    // Render Charts : plotly.js
-    //drawCharts()
-
-
-    // Configurations : confs.js
-    //getConfOptions()
-
-
     let newData = new DataIntegrityClass(data)
 
-    data = newData.data
+    let clone = structuredClone(newData.data);
+    let clone2 = structuredClone(newData.data);
+
+    console.log('newData.data',clone)
 
 
-
-    let clone = structuredClone(data);
-    let clone2 = structuredClone(data);
-
-
-    let mainBeam = new BeamDeflection(clone)
-    mainBeam.run()
+    // Calculate Deflection
+    let beamDef = new BeamDeflection(clone)
+    beamDef.run()
 
 
     let figure = new CanvasClass(clone2)
     figure.run()
 
 
-    let tablo = new PropsTable(mainBeam.data);
+    let tablo = new PropsTable(beamDef.data);
     tablo.renderGeoPropsTable()
 
 
-    let chart = new ChartClass(mainBeam.data);
+    let chart = new ChartClass(beamDef.data);
     chart.deflectionGraph();
     chart.meiGraph();
 
 
-    let clone3 = structuredClone(mainBeam.data);
+    let clone3 = structuredClone(beamDef.data);
 
     let configurations = new ConfigurationClass(clone3);
     configurations.getMastConfigurations()
