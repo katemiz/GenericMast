@@ -5,33 +5,93 @@ class ConfigurationClass {
 
     constructor(data) {
 
+        // console.log("CLASS data",data)
+
         // Data
         this.tubes = data.tubes;
         this.sys = data.sys;
         this.limits = data.limits;
+
+        this.data = data;
         
     }
 
 
     getMastConfigurations() {
     
-        let noSections = 2
+        let minMastSectionNo = 2
         let configurations = []
+
+        let tubeNo,mastSectionArray;
     
     
-        for (let i = noSections; i <= this.tubes.length; i++) {
+        for (let mastSectionNo = minMastSectionNo; mastSectionNo <= this.tubes.length; mastSectionNo++) {
             
-            configurations[i] = []
+
+            let selections = []
     
-            for (let index = 0; index <= this.tubes.length-noSections; index++) {
+            for (let index = 0; index <= this.tubes.length-mastSectionNo; index++) {
+
+                mastSectionArray = []
+
+                tubeNo = this.tubes[index].no
+
+               //mastSectionArray.push(tubeNo)
     
-                let v = this.tubes.splice(index,i)
-    
-                if (v.length === i) {
-                    configurations[i].push(this.tubes.splice(index,i))  
+                //let v = this.tubes.splice(index,i)
+
+                //console.log("tube no",this.tubes[index].no)
+
+                //let j=1;
+
+                for (let k = tubeNo; k<tubeNo+mastSectionNo;k++) {
+                    mastSectionArray.push(k)
+                    //console.log("k ",k)
+
+
+                    // console.log("mastSectionNo,index,tubeNo,k",mastSectionNo,index,tubeNo,k)
+
                 }
+
+                // console.log("--------")
+                // console.log("v",v)
+    
+                // if (v.length === i) {
+                //     configurations[i].push(this.tubes.splice(index,i))  
+                // }
+
+                selections.push(mastSectionArray)
+                
             }
+
+            configurations[mastSectionNo] = selections
+
+
+            // console.log('seelcted dizin',selectedIndex)
         }
+
+        // console.log(configurations)
+
+
+        // Process Each Configuration
+
+        configurations.forEach((confs,index) => {
+
+
+            console.log("STARTNG CONFİGUARONS",index)
+
+            confs.forEach((c) => {
+                this.ProcessConfiguration(c)
+            })
+
+
+        })
+
+
+
+
+
+        return true;
     
         let table = []
     
@@ -84,6 +144,58 @@ class ConfigurationClass {
     }
 
 
+
+
+    ProcessConfiguration(tubeNoArray) {
+
+        console.log("tubeNoArray",tubeNoArray)
+
+        let newData = this.GetConfiguredData(tubeNoArray)
+
+        console.log("newData",newData)
+
+
+    }
+
+
+
+    GetConfiguredData(tubeNoArray) {
+
+        // console.log("sys",structuredClone(this.sys))
+
+
+        let newData = {
+            "sys":structuredClone(this.sys),
+            "tubes":[],
+            "limits":[]
+        }
+
+
+        this.tubes.forEach( (t,i) => {
+
+            if (tubeNoArray.includes(t.no)) {
+                newData.tubes.push(t)
+            }
+        })
+
+
+        for (let k=tubeNoArray[0];k<tubeNoArray[tubeNoArray.length-1];k++) {
+            newData.limits.push(this.limits[k-1])
+
+            //console.log("this.limits[k-1]",this.limits[k-1])
+
+        }
+
+        //console.log("tubeNoArray[0]",tubeNoArray[0])
+
+        // console.log("newData",newData)
+
+        let processedData = new DataIntegrityClass(newData)
+
+        //return newData;
+        return processedData.data
+
+    }
 
 
 
@@ -219,4 +331,74 @@ function getConfigDeflection(tubeNumbers) {
     let lastTubeNo = data.tubes[data.tubes.length-1];
 
     return lastTubeNo.deflectionTop
+}
+
+
+
+
+function addConfRow(table) {
+
+    let p = document.getElementById('confBody')
+
+    let tr,tdTitle,tdConf,tdHeight,tdWeight,tdDeflection
+
+    table.forEach((row) => {
+
+        row.confs.forEach((r,index) => {
+
+            tr = document.createElement('tr')
+
+            if (index < 1) {
+
+                tdTitle = document.createElement('td')
+                tdTitle.classList.add('subtitle','has-text-centered','has-text-link')
+                tdTitle.rowSpan =row.noOfConf
+
+                let pH = document.createElement('p')
+                pH.classList.add('title')
+                pH.innerHTML = r.sayac
+                
+                let pT = document.createElement('p')
+                pT.classList.add('is-size-7','has-text-weight-light')
+                pT.innerHTML = 'No Of MastSections'
+
+                tdTitle.appendChild(pH)
+                tdTitle.appendChild(pT)
+
+                tr.appendChild(tdTitle)
+            }
+
+            tdConf = document.createElement('td')
+            tdConf.innerHTML = r.text
+
+            tr.appendChild(tdConf)
+
+            tdHeightNested = document.createElement('td')
+            tdHeightNested.innerHTML = r.heightNested.toFixed(2)
+
+            tr.appendChild(tdHeightNested)
+
+            tdHeightExtended = document.createElement('td')
+            tdHeightExtended.innerHTML = r.heightExtended.toFixed(2)
+
+            tr.appendChild(tdHeightExtended)
+
+            tdWeight = document.createElement('td')
+            tdWeight.innerHTML = r.weight.toFixed(1)
+
+            tr.appendChild(tdWeight)
+
+            tdDeflection = document.createElement('td')
+            tdDeflection.innerHTML = r.deflection
+
+            tr.appendChild(tdDeflection)
+            p.appendChild(tr)
+
+        })
+
+
+
+
+    })
+
 }
