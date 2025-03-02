@@ -91,7 +91,7 @@ class ConfigurationClass {
 
 
 
-        return true;
+        //return true;
     
         let table = []
     
@@ -118,10 +118,10 @@ class ConfigurationClass {
     
                 confDizin.push({
                     "text":satir,
-                    "heightNested":getConfigNestedHeight(tubeNumbers),
-                    "heightExtended":getConfigExtendedHeight(tubeNumbers),
-                    "weight":getConfigWeight(tubeNumbers),
-                    "deflection":getConfigDeflection(tubeNumbers),
+                    "heightNested":2222,//getConfigNestedHeight(tubeNumbers),
+                    "heightExtended":3333,//getConfigExtendedHeight(tubeNumbers),
+                    "weight":444,///getConfigWeight(tubeNumbers),
+                    "deflection":6666,//getConfigDeflection(tubeNumbers),
                     "sayac":sayac
                 })
 
@@ -140,7 +140,7 @@ class ConfigurationClass {
             }
         })
     
-        //addConfRow(table)
+        //AddConfRow(table)
     }
 
 
@@ -198,7 +198,72 @@ class ConfigurationClass {
     }
 
 
+    AddConfRow(table) {
 
+        let p = document.getElementById('confBody')
+    
+        let tr,tdTitle,tdConf,tdHeight,tdWeight,tdDeflection
+    
+        table.forEach((row) => {
+    
+            row.confs.forEach((r,index) => {
+    
+                tr = document.createElement('tr')
+    
+                if (index < 1) {
+    
+                    tdTitle = document.createElement('td')
+                    tdTitle.classList.add('subtitle','has-text-centered','has-text-link')
+                    tdTitle.rowSpan =row.noOfConf
+    
+                    let pH = document.createElement('p')
+                    pH.classList.add('title')
+                    pH.innerHTML = r.sayac
+                    
+                    let pT = document.createElement('p')
+                    pT.classList.add('is-size-7','has-text-weight-light')
+                    pT.innerHTML = 'No Of MastSections'
+    
+                    tdTitle.appendChild(pH)
+                    tdTitle.appendChild(pT)
+    
+                    tr.appendChild(tdTitle)
+                }
+    
+                tdConf = document.createElement('td')
+                tdConf.innerHTML = r.text
+    
+                tr.appendChild(tdConf)
+    
+                tdHeightNested = document.createElement('td')
+                tdHeightNested.innerHTML = r.heightNested.toFixed(2)
+    
+                tr.appendChild(tdHeightNested)
+    
+                tdHeightExtended = document.createElement('td')
+                tdHeightExtended.innerHTML = r.heightExtended.toFixed(2)
+    
+                tr.appendChild(tdHeightExtended)
+    
+                tdWeight = document.createElement('td')
+                tdWeight.innerHTML = r.weight.toFixed(1)
+    
+                tr.appendChild(tdWeight)
+    
+                tdDeflection = document.createElement('td')
+                tdDeflection.innerHTML = r.deflection
+    
+                tr.appendChild(tdDeflection)
+                p.appendChild(tr)
+    
+            })
+    
+    
+    
+    
+        })
+    
+    }
 
 
 
@@ -336,69 +401,3 @@ function getConfigDeflection(tubeNumbers) {
 
 
 
-function addConfRow(table) {
-
-    let p = document.getElementById('confBody')
-
-    let tr,tdTitle,tdConf,tdHeight,tdWeight,tdDeflection
-
-    table.forEach((row) => {
-
-        row.confs.forEach((r,index) => {
-
-            tr = document.createElement('tr')
-
-            if (index < 1) {
-
-                tdTitle = document.createElement('td')
-                tdTitle.classList.add('subtitle','has-text-centered','has-text-link')
-                tdTitle.rowSpan =row.noOfConf
-
-                let pH = document.createElement('p')
-                pH.classList.add('title')
-                pH.innerHTML = r.sayac
-                
-                let pT = document.createElement('p')
-                pT.classList.add('is-size-7','has-text-weight-light')
-                pT.innerHTML = 'No Of MastSections'
-
-                tdTitle.appendChild(pH)
-                tdTitle.appendChild(pT)
-
-                tr.appendChild(tdTitle)
-            }
-
-            tdConf = document.createElement('td')
-            tdConf.innerHTML = r.text
-
-            tr.appendChild(tdConf)
-
-            tdHeightNested = document.createElement('td')
-            tdHeightNested.innerHTML = r.heightNested.toFixed(2)
-
-            tr.appendChild(tdHeightNested)
-
-            tdHeightExtended = document.createElement('td')
-            tdHeightExtended.innerHTML = r.heightExtended.toFixed(2)
-
-            tr.appendChild(tdHeightExtended)
-
-            tdWeight = document.createElement('td')
-            tdWeight.innerHTML = r.weight.toFixed(1)
-
-            tr.appendChild(tdWeight)
-
-            tdDeflection = document.createElement('td')
-            tdDeflection.innerHTML = r.deflection
-
-            tr.appendChild(tdDeflection)
-            p.appendChild(tr)
-
-        })
-
-
-
-
-    })
-
-}
