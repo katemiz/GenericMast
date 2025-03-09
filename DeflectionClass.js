@@ -10,6 +10,7 @@ class BeamDeflection {
 
         this.setGeometricValues();
         this.calculateDeflection();
+        this.calculateTotalMass();
     }
   
 
@@ -189,4 +190,16 @@ class BeamDeflection {
             this.tubes[i-1].deflectionTop = deflectionTop
         }
     }    
+
+
+
+
+    calculateTotalMass() {
+        let totalMass = 0;
+        this.tubes.forEach((tube) => {
+            totalMass += tube.massKG
+        })
+
+        this.sys.totalMass = totalMass
+    }
 }

@@ -70,89 +70,113 @@ class ConfigurationClass {
             // console.log('seelcted dizin',selectedIndex)
         }
 
-        // console.log(configurations)
+        //console.log("all",configurations)
 
 
         // Process Each Configuration
 
+        let table = []
+
+
+
         configurations.forEach((confs,index) => {
 
+            // index shows the number of mast sections
+            // confs shows the configurations for that number of mast sections
 
-            console.log("STARTNG CONFİGUARONS",index)
+            console.log("STARTNG CONFIG",index)
+            console.log("confs",confs)
 
-            confs.forEach((c) => {
-                this.ProcessConfiguration(c)
+            let confDizin = []
+
+
+            confs.forEach((arrayOfTubeNumbers) => {
+
+                // console.log("arrayOfTubeNumbers",arrayOfTubeNumbers)
+                let confApplicableData = this.GetConfiguredData(arrayOfTubeNumbers)
+
+                let tubeDia = []
+
+                arrayOfTubeNumbers.forEach((tubeNo) => {
+
+                    let tube = this.tubes.filter((t) => t.no === tubeNo)[0]
+                    tubeDia.push(tube.od)
+                })
+
+                // CONFIGURATON DESCRIPTION TEXT
+                let configDescriptionText = 'C '+tubeDia.join('-');
+
+                // CONFIGURATION DATA INTEGRITY CHECK : EXTENDED HEIGHT, NESTED HEIGHT
+                let confApplicableDataRevised = new DataIntegrityClass(confApplicableData)
+
+                // CONFIGURATION DEFLECTION
+                let confDeflection = new BeamDeflection(structuredClone(confApplicableDataRevised.data))
+                confDeflection.run()
+
+                let deflectionTop = confDeflection.data.tubes[confDeflection.data.tubes.length-1].deflectionTop
+
+                //console.log("confDeflection",deflectionTop)
+
+                confDizin.push({
+                    "configDescriptionText":configDescriptionText,
+                    "heightNested":confApplicableDataRevised.data.sys.nestedHeight,
+                    "heightExtended":confApplicableDataRevised.data.sys.extendedHeight,
+                    "totalMass":confDeflection.data.sys.totalMass,
+                    "deflection":deflectionTop,
+                    "sayac":index
+                })
+
+
+                console.log('----------------------')
+                console.log('confDizin',confDizin)
+    
+
+
             })
+
+
+            if (confDizin.length>0) {
+                table.push({
+                    "noOfConf":confs.length,
+                    "confs":confDizin,
+                })
+
+
+
+            }
+
+            //confs.table.push(table)
+
+
+
+
 
 
         })
 
+        console.log("table",table)
 
 
+        this.AddConfRow(table)
 
 
         //return true;
     
-        let table = []
     
-        configurations.forEach((c) => {
-    
-            let confDizin = []
-    
-            c.forEach((d) => {
-    
-                let tubeNumbers = []
-                let satir = false
-                let sayac = 0
-    
-                d.forEach((gg) => {
-                    if (satir) {
-                        satir += '-'+gg.od
-                    } else {
-                        satir = gg.od
-                    }
-                    sayac++
-    
-                    tubeNumbers.push(gg.no)
-                })
-    
-                confDizin.push({
-                    "text":satir,
-                    "heightNested":2222,//getConfigNestedHeight(tubeNumbers),
-                    "heightExtended":3333,//getConfigExtendedHeight(tubeNumbers),
-                    "weight":444,///getConfigWeight(tubeNumbers),
-                    "deflection":6666,//getConfigDeflection(tubeNumbers),
-                    "sayac":sayac
-                })
 
     
-                console.log("SATIR",satir)
-                console.log("tube numbers",tubeNumbers)
-            })
-    
-            console.log('----------------------')
-    
-            if (confDizin.length>0) {
-                table.push({
-                    "noOfConf":c.length,
-                    "confs":confDizin,
-                })
-            }
-        })
-    
-        //AddConfRow(table)
     }
 
 
 
 
-    ProcessConfiguration(tubeNoArray) {
+    SILProcessConfiguration(tubeNoArray) {
 
-        console.log("tubeNoArray",tubeNoArray)
+        // console.log("tubeNoArray",tubeNoArray)
 
         let newData = this.GetConfiguredData(tubeNoArray)
 
-        console.log("newData",newData)
+        // console.log("newData",newData)
 
 
     }
@@ -202,19 +226,37 @@ class ConfigurationClass {
 
         let p = document.getElementById('confBody')
     
-        let tr,tdTitle,tdConf,tdHeight,tdWeight,tdDeflection
+        let tr,tdTitle,tdConf,tdHeightNested,tdHeightExtended,tdWeight,tdDeflection
     
         table.forEach((row) => {
+
+            console.log("row",row)
+
+
+            // row.forEach((r) => {
+
+            //     console.log("r",r)
+            // })
+
+            // console.log("row",row)
+
     
             row.confs.forEach((r,index) => {
+
+                 console.log("index",index)
+                 console.log("r",r)
+
     
                 tr = document.createElement('tr')
     
-                if (index < 1) {
+                if (index === 0) {
     
                     tdTitle = document.createElement('td')
                     tdTitle.classList.add('subtitle','has-text-centered','has-text-link')
                     tdTitle.rowSpan =row.noOfConf
+
+                    console.log("row.confs.length",row.noOfConf)
+
     
                     let pH = document.createElement('p')
                     pH.classList.add('title')
@@ -222,43 +264,48 @@ class ConfigurationClass {
                     
                     let pT = document.createElement('p')
                     pT.classList.add('is-size-7','has-text-weight-light')
-                    pT.innerHTML = 'No Of MastSections'
+                    pT.innerHTML = 'No Of Mast Sections'
     
                     tdTitle.appendChild(pH)
                     tdTitle.appendChild(pT)
     
                     tr.appendChild(tdTitle)
                 }
+
     
                 tdConf = document.createElement('td')
-                tdConf.innerHTML = r.text
+                tdConf.innerHTML = r.configDescriptionText
     
                 tr.appendChild(tdConf)
     
                 tdHeightNested = document.createElement('td')
-                tdHeightNested.innerHTML = r.heightNested.toFixed(2)
+                tdHeightNested.classList.add('has-text-right')
+                tdHeightNested.innerHTML = r.heightNested.toFixed(0)+" mm"
     
                 tr.appendChild(tdHeightNested)
     
                 tdHeightExtended = document.createElement('td')
-                tdHeightExtended.innerHTML = r.heightExtended.toFixed(2)
+                tdHeightExtended.classList.add('has-text-right')
+                tdHeightExtended.innerHTML = r.heightExtended.toFixed(0)+" mm"
     
                 tr.appendChild(tdHeightExtended)
     
                 tdWeight = document.createElement('td')
-                tdWeight.innerHTML = r.weight.toFixed(1)
+                tdWeight.classList.add('has-text-right')
+                tdWeight.innerHTML = r.totalMass.toFixed(1)+" kg"
     
                 tr.appendChild(tdWeight)
     
                 tdDeflection = document.createElement('td')
-                tdDeflection.innerHTML = r.deflection
+                tdDeflection.classList.add('has-text-right')
+                tdDeflection.innerHTML = r.deflection.toFixed(1)+" mm"
     
                 tr.appendChild(tdDeflection)
                 p.appendChild(tr)
     
             })
     
-    
+
     
     
         })
@@ -280,123 +327,16 @@ class ConfigurationClass {
 
 
 
-function getConfigNestedHeight(tubeNumbers) {
-
-    let firstTubeNo = tubeNumbers[0];
-    let lastTubeNo = tubeNumbers[tubeNumbers.length-1];
-    let nestedHeight = 0;
-
-    tubeNumbers.forEach((tNo) => {
-
-        let s = data.tubes.filter((tube) => tube.no === tNo)[0]
-
-        if (s.no === firstTubeNo) {
-            nestedHeight += s.length + s.hHead
-        } else if (s.no === lastTubeNo) {
-            nestedHeight += s.pAdapterHeadHeight
-        } else {
-            nestedHeight += s.hHead
-        }
-    })
-
-    // console.log("nestedHeight",nestedHeight)
-
-    return nestedHeight/1000    // m
-}
 
 
 
 
-function getConfigExtendedHeight(tubeNumbers) {
-
-    let firstTubeNo = tubeNumbers[0];
-    let lastTubeNo = tubeNumbers[tubeNumbers.length-1];
-    let extendedHeight = 0;
-
-    let filteredTubes = data.tubes.filter((e) => e.no >= firstTubeNo && e.no <=lastTubeNo)
-
-    filteredTubes.forEach((t) => {
-
-        if (t.no === lastTubeNo) {
-            extendedHeight += t.length
-            extendedHeight += t.pAdapterHeadHeight
-        } else {
-            extendedHeight = t.zD - t.zA;
-        }
-    })
-
-    return extendedHeight/1000
-}
-
-
-function getConfigWeight(tubeNumbers) {
-
-    let firstTubeNo = tubeNumbers[0];
-    let lastTubeNo = tubeNumbers[tubeNumbers.length-1];
-    let sectionWeight,weigthFoot,weightHead,weightTube
-
-    tubeNumbers.forEach((tNo) => {
-
-        let s = data.tubes.filter((tube) => tube.no === tNo)[0]
-
-        if (s.no === firstTubeNo) {
-
-            // First tube
-            weigthFoot = s.wFootRollerAdapter
-            weightTube = s.mass
-            weightHead = s.wHeadRollerAdapter
-
-        } else if (s.no === lastTubeNo) {
-
-            // Last tube
-            weigthFoot = s.wFootFixedAdapter
-            weightTube = s.mass
-            weightHead = s.wPayloadAdapter
-
-        } else {
-
-            weigthFoot = s.wFootFixedAdapter
-            weightTube = s.mass
-            weightHead = s.wHeadRollerAdapter
-        }
-    })
-
-    sectionWeight = weigthFoot+weightTube+weightHead
-
-    // console.log("weigthFoot+weightTube+weightHead",weigthFoot,weightTube,weightHead,sectionWeight)
-    // console.log("sectionWeight",sectionWeight)
-
-    return sectionWeight
-}
 
 
 
-function getConfigDeflection(tubeNumbers) {
 
-    let tubesData = []
-    let limitsData = []
 
-    tubeNumbers.forEach((tNo) => {
 
-        let s = data.tubes.filter((tube) => tube.no === tNo)[0]
-        let limit = data.limits.filter((ol) => ol.no === s.no)[0]
-
-        console.log("s",s)
-
-        tubesData.push(s)
-        limitsData.push(limit)
-    })
-
-    data.tubes = tubesData
-    data.limits = limitsData
-    console.log("tubesData",tubesData)
-
-    //runCalculations()
-
-    let lastTubeNo = data.tubes[data.tubes.length-1];
-
-    return lastTubeNo.deflectionTop
-}
 
 
 
