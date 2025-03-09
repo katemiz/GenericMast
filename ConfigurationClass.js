@@ -84,8 +84,8 @@ class ConfigurationClass {
             // index shows the number of mast sections
             // confs shows the configurations for that number of mast sections
 
-            console.log("STARTNG CONFIG",index)
-            console.log("confs",confs)
+                        // console.log("STARTNG CONFIG",index)
+                        // console.log("confs",confs)
 
             let confDizin = []
 
@@ -127,11 +127,8 @@ class ConfigurationClass {
                 })
 
 
-                console.log('----------------------')
-                console.log('confDizin',confDizin)
-    
-
-
+                // console.log('----------------------')
+                // console.log('confDizin',confDizin)
             })
 
 
@@ -140,46 +137,20 @@ class ConfigurationClass {
                     "noOfConf":confs.length,
                     "confs":confDizin,
                 })
-
-
-
             }
 
             //confs.table.push(table)
-
-
-
-
-
-
         })
 
-        console.log("table",table)
+        //console.log("table",table)
 
 
-        this.AddConfRow(table)
-
-
-        //return true;
-    
-    
-
-    
+        this.AddConfRow(table)    
     }
 
 
 
 
-    SILProcessConfiguration(tubeNoArray) {
-
-        // console.log("tubeNoArray",tubeNoArray)
-
-        let newData = this.GetConfiguredData(tubeNoArray)
-
-        // console.log("newData",newData)
-
-
-    }
 
 
 
@@ -230,21 +201,15 @@ class ConfigurationClass {
     
         table.forEach((row) => {
 
-            console.log("row",row)
+            //console.log("row",row)
 
 
-            // row.forEach((r) => {
-
-            //     console.log("r",r)
-            // })
-
-            // console.log("row",row)
 
     
             row.confs.forEach((r,index) => {
 
-                 console.log("index",index)
-                 console.log("r",r)
+                //  console.log("index",index)
+                //  console.log("r",r)
 
     
                 tr = document.createElement('tr')
@@ -255,7 +220,7 @@ class ConfigurationClass {
                     tdTitle.classList.add('subtitle','has-text-centered','has-text-link')
                     tdTitle.rowSpan =row.noOfConf
 
-                    console.log("row.confs.length",row.noOfConf)
+                    // console.log("row.confs.length",row.noOfConf)
 
     
                     let pH = document.createElement('p')

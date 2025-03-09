@@ -1,6 +1,9 @@
 let showModal = false
-let maxNoOfSections = 15
-let noOfSections = maxNoOfSections;
+const maxNoOfSections = 15
+//let noOfSections = maxNoOfSections;
+
+let currentSectionsNo = data.tubes.length
+
 
 function toggleModal (index = false) {
 
@@ -13,6 +16,7 @@ function toggleModal (index = false) {
     } else {
 
         m = document.getElementById('modal')
+        renderModalContent()
     }
 
     if (showModal) {
@@ -32,7 +36,6 @@ function toggleModal (index = false) {
 
 function renderModalContent() {
 
-    console.log("Running function :",arguments.callee.name);
 
     /*
         Modal
@@ -44,6 +47,9 @@ function renderModalContent() {
     */
 
 
+    // SECTIONS NO BUTTON
+    noOfSectionsButton()
+
     // SECTION
     renderAllTubeCards()
 
@@ -53,55 +59,112 @@ function renderModalContent() {
 
 
 
-function textFields(id,labelText,infoText,placeholder) {
+function textFields(id,labelText,helpText=false,placeholder,width='is-4') {
 
     /*
-        <div class="field">
-        <label class="label">Name</label>
+
+    <div class="column width field">
+        <label class="label">labelText</label>
         <div class="control">
-            <input class="input" type="text" placeholder="Text input">
+        <input class="input" type="text" placeholder="placeholder" id="inp+id">
         </div>
-        <p class="help is-size-7">Info</p>
-        </div>
+        <p class="help is-size-7">helpText</p>
+    </div>
+
     */
 
 
-    let p1 = document.createElement('p')
-    p1.classList.add('help','is-size-7')
-    p1.innerHTML = infoText
-
-    let input = document.createElement('input')
-    input.type = 'text'
-    input.classList.add('input','is-small')
-    input.innerHTML = placeholder
-
-    let control = document.createElement('div')
-
+    let d = document.createElement('div')
+    d.classList.add('column','field',width)
 
     let label = document.createElement('label')
+    label.classList.add('label')
     label.innerHTML = labelText
 
-    let field = document.createElement('div')
-    field.classList.add('field')
+    let control = document.createElement('div')
+    control.classList.add('control')
 
-    field.appendChild(label)
-    field.appendChild(control)
+    let input = document.createElement('input')
+    input.classList.add('input')
+    input.type = 'text'
+    input.placeholder = placeholder
+    input.id = 'inp'+id
+
+    if (helpText) {
+        let p = document.createElement('p')
+        p.classList.add('help','is-size-7')
+        p.innerHTML = helpText
+        d.appendChild(p)
+    }
+
+    d.appendChild(label)
+    d.appendChild(control)
     control.appendChild(input)
-    field.appendChild(p1)
 
-    return field
+    return d
 }
 
 
 
 function renderAllTubeCards() {   
 
-    console.log("Running function :",arguments.callee.name);
 
-    for (let index = 1; index <= noOfSections; index++) {
+    for (let index = 1; index <= currentSectionsNo; index++) {
         addOneTubeCard(index)
     }
 }
+
+
+
+
+
+
+
+
+function noOfSectionsButton() {
+
+
+
+
+
+
+
+    let select = document.getElementById('getNoOfSections')
+    select.id = 'getNoOfSections'
+
+
+    for (let index = 1; index <= maxNoOfSections; index++) {
+        
+        let option = document.createElement("option");
+        option.text = index;
+        option.value = index;
+
+        if (currentSectionsNo == index) {
+            option.selected = true
+        }
+
+        select.appendChild(option)
+    }
+
+
+    // Z-Offset value
+    let zOffset = document.getElementById('zOffset')
+    zOffset.value = data.sys.zOffset
+
+    // Horizontal Load value
+    let horLoad = document.getElementById('horLoad')
+    horLoad.value = data.sys.horLoad
+
+
+
+
+
+}
+
+
+
+
+
 
 
 
@@ -119,47 +182,127 @@ function addOneTubeCard(index) {
 
         <div class="column">
             <div class="columns">
-                <div class="column is-4">OD</div>
-                <div class="column is-4">THK</div>
-                <div class="column is-4">Length</div>
+
+                <div class="column is-4 field">
+                    <label class="label">Outer Diameter</label>
+                    <div class="control">
+                    <input class="input" type="text" placeholder="N" id="horLoad">
+                    </div>
+                    <p class="help">Horizontal load acting on payload (N)</p>
+                </div>
+
+                <div class="column is-4 field">
+                    <label class="label">Thickness</label>
+                    <div class="control">
+                    <input class="input" type="text" placeholder="N" id="horLoad">
+                    </div>
+                    <p class="help">Horizontal load acting on payload (N)</p>
+                </div>
+
+
+                <div class="column is-4 field">
+                    <label class="label">Length</label>
+                    <div class="control">
+                    <input class="input" type="text" placeholder="N" id="horLoad">
+                    </div>
+                    <p class="help">Horizontal load acting on payload (N)</p>
+                </div>
+
             </div>
 
             <div class="columns">
-                <div class="column is-8">Material</div>
-                <div class="column">Overlap</div>
+
+                <div class="column is-4 field">
+                    <label class="label">Material</label>
+                    <div class="control">
+                    <input class="input" type="text" placeholder="N" id="horLoad">
+                    </div>
+                    <p class="help">Horizontal load acting on payload (N)</p>
+                </div>
+
+
+                <div class="column is-4 field">
+                    <label class="label">Overlap</label>
+                    <div class="control">
+                    <input class="input" type="text" placeholder="N" id="horLoad">
+                    </div>
+                    <p class="help">Horizontal load acting on payload (N)</p>
+                </div>
+
+                <div class="column is-4 field">
+                    <label class="label">Heading</label>
+                    <div class="control">
+                    <input class="input" type="text" placeholder="N" id="horLoad">
+                    </div>
+                    <p class="help">Horizontal load acting on payload (N)</p>
+                </div>
+
+
+
+
             </div>
         </div>
     </div>
     */
 
-    let divGrid = document.createElement('div')
-    divGrid.id = 'tubeGrid'+index
-    divGrid.classList.add('grid','my-4','has-background-warning')
 
-    let odCell = document.createElement('div')
-    odCell.classList.add('cell')
+    let card = document.createElement('div')
+    card.classList.add('columns')
 
-    let thkCell = document.createElement('div')
-    thkCell.classList.add('cell')
+    let cardTitle = document.createElement('div')
+    cardTitle.classList.add('column','is-1','is-size-2','has-text-weight-bold')
+    cardTitle.innerHTML = 'S'+index
 
-    let lenCell = document.createElement('div')
-    lenCell.classList.add('cell')
+    let cardBody = document.createElement('div')
+    cardBody.classList.add('column')
 
-    divGrid.appendChild(odCell)
-    divGrid.appendChild(thkCell)
-    divGrid.appendChild(lenCell)
+    card.appendChild(cardTitle)
+    card.appendChild(cardBody)
 
-    let od = textFields('varOD','OD','Outer Diameter of Tube','mm') 
-    odCell.appendChild(od)
+    let cardBodyRow1 = document.createElement('div')
+    cardBodyRow1.classList.add('columns')   
 
-    let thk = textFields('varTHK','Thickness','Thickness of Tube','mm') 
-    thkCell.appendChild(thk)
+    let cardBodyRow2 = document.createElement('div')
+    cardBodyRow2.classList.add('columns')
+
+    cardBody.appendChild(cardBodyRow1)
+    cardBody.appendChild(cardBodyRow2)
 
 
-    let tlength = textFields('varLength','Length','Length of Tube','mm') 
-    lenCell.appendChild(tlength)
 
-    document.getElementById('mst').appendChild(divGrid)
+
+
+    let odField = textFields('varOD','OD','Outer Diameter of Tube','mm')
+    let thkField = textFields('varTHK','Thickness','Thickness of Tube','mm')
+    let lenField = textFields('varLength','Length','Length of Tube','mm')
+
+    cardBodyRow1.appendChild(odField)
+    cardBodyRow1.appendChild(thkField)
+    cardBodyRow1.appendChild(lenField)
+
+
+
+    let materialField = textFields('varMaterial','Material','Material of Tube','')
+    let overlapField = textFields('varOverlap','Overlap','Overlap of Tube','')
+    let headingField = textFields('varHeading','Heading','Heading of Tube','')
+
+
+    cardBodyRow2.appendChild(materialField)
+    cardBodyRow2.appendChild(overlapField)
+    cardBodyRow2.appendChild(headingField)
+
+
+
+
+
+
+    document.getElementById('mst').appendChild(card)
+
+
+
+
+
+
 
 
     return true
