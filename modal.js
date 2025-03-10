@@ -1,6 +1,5 @@
 let showModal = false
 const maxNoOfSections = 15
-//let noOfSections = maxNoOfSections;
 
 let currentSectionsNo = data.tubes.length
 
@@ -183,62 +182,17 @@ function addOneTubeCard(index) {
         <div class="column">
             <div class="columns">
 
-                <div class="column is-4 field">
-                    <label class="label">Outer Diameter</label>
-                    <div class="control">
-                    <input class="input" type="text" placeholder="N" id="horLoad">
-                    </div>
-                    <p class="help">Horizontal load acting on payload (N)</p>
-                </div>
-
-                <div class="column is-4 field">
-                    <label class="label">Thickness</label>
-                    <div class="control">
-                    <input class="input" type="text" placeholder="N" id="horLoad">
-                    </div>
-                    <p class="help">Horizontal load acting on payload (N)</p>
-                </div>
-
-
-                <div class="column is-4 field">
-                    <label class="label">Length</label>
-                    <div class="control">
-                    <input class="input" type="text" placeholder="N" id="horLoad">
-                    </div>
-                    <p class="help">Horizontal load acting on payload (N)</p>
-                </div>
+                textFields('vOD','Outer Diameter of Tube',helpText=false,'160','is-4')
+                textFields('vThk','Tube Thickness',helpText=false,'5','is-4')
+                textFields('vLength','Tube Length',helpText=false,'1200','is-4')
 
             </div>
 
             <div class="columns">
 
-                <div class="column is-4 field">
-                    <label class="label">Material</label>
-                    <div class="control">
-                    <input class="input" type="text" placeholder="N" id="horLoad">
-                    </div>
-                    <p class="help">Horizontal load acting on payload (N)</p>
-                </div>
-
-
-                <div class="column is-4 field">
-                    <label class="label">Overlap</label>
-                    <div class="control">
-                    <input class="input" type="text" placeholder="N" id="horLoad">
-                    </div>
-                    <p class="help">Horizontal load acting on payload (N)</p>
-                </div>
-
-                <div class="column is-4 field">
-                    <label class="label">Heading</label>
-                    <div class="control">
-                    <input class="input" type="text" placeholder="N" id="horLoad">
-                    </div>
-                    <p class="help">Horizontal load acting on payload (N)</p>
-                </div>
-
-
-
+                textFields('vMaterial','Tube Material',helpText=false,'Alum','is-4')
+                textFields('vOverlap','Section Overlap Length',helpText=false,'500','is-4')
+                textFields('vOverlap','Over Head Length',helpText=false,'200','is-4')
 
             </div>
         </div>
@@ -247,16 +201,16 @@ function addOneTubeCard(index) {
 
 
     let card = document.createElement('div')
-    card.classList.add('columns')
+    card.classList.add('columns','card','my-2','has-background-white-ter','no-gap')
 
-    let cardTitle = document.createElement('div')
-    cardTitle.classList.add('column','is-1','is-size-2','has-text-weight-bold')
-    cardTitle.innerHTML = 'S'+index
+    // let cardTitle = document.createElement('div')
+    // cardTitle.classList.add('column','is-1','is-size-2','has-text-weight-bold')
+    // cardTitle.innerHTML = 'S'+index
 
     let cardBody = document.createElement('div')
     cardBody.classList.add('column')
 
-    card.appendChild(cardTitle)
+    // card.appendChild(cardTitle)
     card.appendChild(cardBody)
 
     let cardBodyRow1 = document.createElement('div')
@@ -272,9 +226,9 @@ function addOneTubeCard(index) {
 
 
 
-    let odField = textFields('varOD','OD','Outer Diameter of Tube','mm')
-    let thkField = textFields('varTHK','Thickness','Thickness of Tube','mm')
-    let lenField = textFields('varLength','Length','Length of Tube','mm')
+    let odField = textFields('vOD','Tube Outer Diameter',helpText=false,'160','is-4')
+    let thkField = textFields('vThk','Tube Thickness',helpText=false,'5','is-4')
+    let lenField = textFields('vLength','Tube Length',helpText=false,'1200','is-4')
 
     cardBodyRow1.appendChild(odField)
     cardBodyRow1.appendChild(thkField)
@@ -282,9 +236,11 @@ function addOneTubeCard(index) {
 
 
 
-    let materialField = textFields('varMaterial','Material','Material of Tube','')
-    let overlapField = textFields('varOverlap','Overlap','Overlap of Tube','')
-    let headingField = textFields('varHeading','Heading','Heading of Tube','')
+
+
+    let materialField = textFields('vMaterial','Tube Material',helpText=false,'Alum','is-4')
+    let overlapField = textFields('vOverlap',' Overlap Length',helpText=false,'500','is-4')
+    let headingField = textFields('vOverlap','Head Length',helpText=false,'200','is-4')
 
 
     cardBodyRow2.appendChild(materialField)
