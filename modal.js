@@ -58,7 +58,7 @@ function renderModalContent() {
 
 
 
-function textFields(id,labelText,helpText=false,placeholder,width='is-4') {
+function textFields(variable,index,labelText,val,helpText=false,placeholder,width='is-4') {
 
     /*
 
@@ -78,7 +78,7 @@ function textFields(id,labelText,helpText=false,placeholder,width='is-4') {
 
     let label = document.createElement('label')
     label.classList.add('label')
-    label.innerHTML = labelText
+    label.innerHTML = labelText + ' '+index
 
     let control = document.createElement('div')
     control.classList.add('control')
@@ -86,8 +86,9 @@ function textFields(id,labelText,helpText=false,placeholder,width='is-4') {
     let input = document.createElement('input')
     input.classList.add('input')
     input.type = 'text'
+    input.value = val
     input.placeholder = placeholder
-    input.id = 'inp'+id
+    input.id = variable+index
 
     if (helpText) {
         let p = document.createElement('p')
@@ -103,13 +104,79 @@ function textFields(id,labelText,helpText=false,placeholder,width='is-4') {
     return d
 }
 
+function materialField (index) {
+
+    /*
+    <div class="select">
+        <select id="mat">
+            <option>Select dropdown</option>
+            <option>With options</option>
+        </select>
+    </div>
+    */
+
+    let materials = [
+        {
+            text:"Aluminium",
+            value:70000
+        },
+
+        {
+            text:"Steel",
+            value:210000
+        },
+    ]
+
+
+    let f = document.createElement('div')
+    f.classList.add('column','field','is-4')
+
+    let label = document.createElement('label')
+    label.classList.add('label')
+    label.innerHTML = 'Tube Material'
+
+    let control = document.createElement('div')
+    control.classList.add('control','select')
+
+
+
+
+    // let d = document.createElement('div')
+    // d.classList.add('select')
+
+    let s = document.createElement('select')
+    s.id = 'mat'+index
+
+    f.appendChild(label)
+    f.appendChild(control)
+    control.appendChild(s)
+
+
+    materials.forEach(m=>{
+        let opt = document.createElement('option');
+        opt.value = m.value
+        opt.innerHTML = m.text
+        s.appendChild(opt)
+    })
+
+    return f
+}
+
 
 
 function renderAllTubeCards() {   
 
 
     for (let index = 1; index <= currentSectionsNo; index++) {
-        addOneTubeCard(index)
+
+        let t
+
+        if (data.tubes[index-1]) {
+            t = data.tubes[index-1]
+        }
+
+
+        addOneTubeCard(index,t)
     }
 }
 
@@ -170,9 +237,7 @@ function noOfSectionsButton() {
 
 
 
-function addOneTubeCard(index) {
-
-    console.log("Running function :",arguments.callee.name);
+function addOneTubeCard(index,t) {
 
     /*
     <div class="columns">
@@ -199,9 +264,13 @@ function addOneTubeCard(index) {
     </div>
     */
 
+    let od = t.od;
+    let thk = t.thk
+    let length = t.length
+
 
     let card = document.createElement('div')
-    card.classList.add('columns','card','my-2','has-background-white-ter','no-gap')
+    card.classList.add('columns','my-2','has-background-white-ter','no-gap')
 
     // let cardTitle = document.createElement('div')
     // cardTitle.classList.add('column','is-1','is-size-2','has-text-weight-bold')
@@ -226,9 +295,9 @@ function addOneTubeCard(index) {
 
 
 
-    let odField = textFields('vOD','Tube Outer Diameter',helpText=false,'160','is-4')
-    let thkField = textFields('vThk','Tube Thickness',helpText=false,'5','is-4')
-    let lenField = textFields('vLength','Tube Length',helpText=false,'1200','is-4')
+    let odField = textFields('vOD',index,'Tube Outer Diameter',t.od,helpText=false,'160','is-4')
+    let thkField = textFields('vThk',index,'Tube Thickness',t.thickness,helpText=false,'5','is-4')
+    let lenField = textFields('vLength',index,'Tube Length',t.length,helpText=false,'1200','is-4')
 
     cardBodyRow1.appendChild(odField)
     cardBodyRow1.appendChild(thkField)
@@ -236,14 +305,15 @@ function addOneTubeCard(index) {
 
 
 
+    let matField = materialField (index)
+
+    
+    //let materialField = textFields('vMaterial','Tube Material',helpText=false,'Alum','is-4')
+    let overlapField = textFields('vOverlap',index,' Overlap Length',t.od,helpText=false,'500','is-4')
+    let headingField = textFields('vHeading',index,'Head Length',t.od,helpText=false,'200','is-4')
 
 
-    let materialField = textFields('vMaterial','Tube Material',helpText=false,'Alum','is-4')
-    let overlapField = textFields('vOverlap',' Overlap Length',helpText=false,'500','is-4')
-    let headingField = textFields('vOverlap','Head Length',helpText=false,'200','is-4')
-
-
-    cardBodyRow2.appendChild(materialField)
+    cardBodyRow2.appendChild(matField)
     cardBodyRow2.appendChild(overlapField)
     cardBodyRow2.appendChild(headingField)
 
