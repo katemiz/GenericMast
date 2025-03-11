@@ -42,6 +42,10 @@ window.onload = function() {
     // console.log("orgData",orgData,clone3)
 
 
+    let nLife = new MastClass()
+    nLife.doCalculations()
+
+
 
 };
 
