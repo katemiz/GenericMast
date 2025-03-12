@@ -27,19 +27,13 @@ class MastClass {
 
     doCalculations() {
 
-        let zBottom = 0
-        let zTop = 0
-        let nestedHeight = this.data.tubes[0].length
+        // HEOGHTS AND Z COORDINATES
+        this.calculateHeights()
+
+        // ROOT MOMENT
+        this.calculateRootMoment();
 
         this.data.tubes.forEach((tube,index) => {
-
-            zTop += tube.length-tube.overlap
-            zBottom += zTop-tube.length
-
-            nestedHeight += tube.headExtension
-
-            tube.zTop = zTop
-            tube.zBottom = zBottom
 
             // AREA
             this.calculateArea(tube)
@@ -53,14 +47,11 @@ class MastClass {
             // EI
             this.calculateEI(tube)
 
-            // ROOT MOMENT
-            this.calculateRootMoment();
-
             // SECTION TOP MOMENTS
-            this.calculateTubeMoments(tube);
+            this.calculateMoments(tube);
 
             // // TUBE M/EI VALUES
-            // this.calculateTubeM_EI(tube,index);
+            this.calculateM_EI(index);
 
             // // TUBE MOMENT - AREA
             // this.calculateMomentArea(tube);
@@ -70,13 +61,31 @@ class MastClass {
         })
 
 
-        this.data.extendedHeight = zTop
-        this.data.nestedHeight = nestedHeight
-        this.data.totalHeight = zTop+this.data.zOffset
-
         console.log("NEW this.data",this.data)
 
 
+    }
+
+    calculateHeights() {
+
+        let zBottom = 0
+        let zTop = 0
+        let nestedHeight = this.data.tubes[0].length
+
+        this.data.tubes.forEach((tube,index) => {
+
+            zTop += tube.length-tube.overlap
+            zBottom += zTop-tube.length
+
+            nestedHeight += tube.headExtension
+
+            tube.zTop = zTop
+            tube.zBottom = zBottom
+        })
+
+        this.data.extendedHeight = zTop
+        this.data.nestedHeight = nestedHeight
+        this.data.totalHeight = zTop+this.data.zOffset
     }
 
 
@@ -118,26 +127,31 @@ class MastClass {
     calculateRootMoment() {
         this.data.mRootNmm = this.data.horLoad*this.data.totalHeight; // Nmm
         this.data.mRootNm = this.data.mRootNmm/1000; // Nm
+        this.data.graph = [{tubeNo:1,z:0,m:-this.data.mRootNmm}]
     } 
 
 
-    calculateTubeMoments(tube){
-    
+    calculateMoments(tube){
+
         tube.mTop = this.data.mRootNmm*tube.zTop/this.data.totalHeight-this.data.mRootNmm; // Nmm
+
+        this.data.graph.push({
+            tubeNo:tube.no,z:tube.zTop,m:tube.mTop
+        })
     } 
 
 
 
 
-    calculateTubeM_EI(tube,index){
+    calculateM_EI(index){
 
-        if (index <1) {
-            tube.meiBottom = tube.mA/tube.ei
-        } else {    
-            tube.meiBottom = tube.mC/tube.ei
-        }
+        // if (index <1) {
+        //     tube.meiBottom = tube.mA/tube.ei
+        // } else {    
+        //     tube.meiBottom = tube.mC/tube.ei
+        // }
 
-        tube.meiTop = tube.mF/tube.ei
+        // tube.moment = tube.mF/tube.ei
     } 
 
 
