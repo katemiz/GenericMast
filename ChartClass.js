@@ -103,6 +103,8 @@ class ChartClass {
         mode: 'lines+markers',
         name: 'M/EI, 1/mm'
     };
+
+    console.log("MEI Data",mei_data)
             
     var veri = [mei_data];
 

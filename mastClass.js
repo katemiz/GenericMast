@@ -68,22 +68,27 @@ class MastClass {
 
     calculateHeights() {
 
-        let zBottom = 0
-        let zTop = 0
+        let z = 0;
+
         let nestedHeight = this.data.tubes[0].length
 
         this.data.tubes.forEach((tube,index) => {
 
-            zTop += tube.length-tube.overlap
-            zBottom += zTop-tube.length
+            z = z-tube.overlap
+
+            tube.zKink = z
+            tube.zBottom = z;
+
+            z = z+tube.length;
+
+            tube.zTop = z;
 
             nestedHeight += tube.headExtension
 
-            tube.zTop = zTop
-            tube.zBottom = zBottom
+            tube.no = index+1
         })
 
-        this.data.extendedHeight = zTop
+        this.data.extendedHeight = z
         this.data.nestedHeight = nestedHeight
         this.data.totalHeight = zTop+this.data.zOffset
     }
@@ -127,23 +132,35 @@ class MastClass {
     calculateRootMoment() {
         this.data.mRootNmm = this.data.horLoad*this.data.totalHeight; // Nmm
         this.data.mRootNm = this.data.mRootNmm/1000; // Nm
-        this.data.graph = [{tubeNo:1,z:0,m:-this.data.mRootNmm}]
+        // this.data.graph = [{tubeNo:1,z:0,m:-this.data.mRootNmm}]
     } 
 
 
     calculateMoments(tube){
 
         tube.mTop = this.data.mRootNmm*tube.zTop/this.data.totalHeight-this.data.mRootNmm; // Nmm
+        tube.mBottom = this.data.mRootNmm*tube.zBottom/this.data.totalHeight-this.data.mRootNmm; // Nmm
 
-        this.data.graph.push({
-            tubeNo:tube.no,z:tube.zTop,m:tube.mTop
-        })
+
+        // this.data.graph.push({
+        //     tubeNo:tube.no,z:tube.zTop,m:tube.mTop
+        // })
     } 
 
 
 
 
-    calculateM_EI(index){
+    calculateM_EI(tube){
+
+
+
+        if (tube.no == 1) {
+            tube.meiTop = tube.mTop/tube.ei;
+            tube.meiBottom = tube.mBottom/tube.ei;
+        }
+
+
+
 
         // if (index <1) {
         //     tube.meiBottom = tube.mA/tube.ei
@@ -166,7 +183,6 @@ class MastClass {
         
             "tubes": [
                 {
-                    "no":1,
                     "length": 2250,
                     "od": 300,
                     "thickness": 5,
@@ -182,7 +198,6 @@ class MastClass {
                     "headExtension":0,
                 },
                 {
-                    "no":2,
                     "length": 2250,
                     "od": 280,
                     "thickness": 4,
@@ -198,7 +213,6 @@ class MastClass {
                     "headExtension":250,
                 },
                 {
-                    "no":3,
                     "length": 2250,
                     "od": 220,
                     "thickness": 3,
@@ -214,7 +228,6 @@ class MastClass {
                     "headExtension":250,
                 },
                 {
-                    "no":4,
                     "length": 2250,
                     "od": 180,
                     "thickness": 2,
@@ -230,7 +243,6 @@ class MastClass {
                     "headExtension":250,
                 },
                 {
-                    "no":5,
                     "length": 2250,
                     "od": 170,
                     "thickness": 2,
@@ -246,7 +258,6 @@ class MastClass {
                     "headExtension":250,
                 },
                 {
-                    "no":6,
                     "length": 2250,
                     "od": 160,
                     "thickness": 2,
@@ -263,7 +274,6 @@ class MastClass {
                 },
         
                 {
-                    "no":7,
                     "length": 2250,
                     "od": 160,
                     "thickness": 2,
@@ -280,7 +290,6 @@ class MastClass {
                 },
         
                 {
-                    "no":8,
                     "length": 2250,
                     "od": 160,
                     "thickness": 2,
