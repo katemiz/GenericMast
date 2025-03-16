@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mast Structural Analysis</title>
+
+  <link rel="icon" type="image/x-icon" href="https://masttech.net/images/favicon.ico">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+
+
+  <script src="../data.js"></script>
+  <script src="../ChartClass.js"></script>
+
+  <script src="../CanvasClass.js"></script>
+  <script src="../ConfigurationClass.js"></script>
+
+  <script src="../mastClass.js"></script>
+
+  <script src="../index.js"></script>
+
+</head>
+
+
+<body class="container has-background-white-ter">
+
+  <section class="section ">
+
+    <h1 class="title is-size-1 ">Telescopic Mast Structure</h1>
+
+    <h2 class="subtitle">
+      Form Parameters
+    </h2>
+
+
+    <div id="tubeFormContainer" class="box">
+      <!-- System Parameters -->
+      <h3 class="title is-4">System Parameters</h3>
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <label class="label">Number of Sections</label>
+            <div class="control">
+              <div class="select">
+                <select id="numSections" onchange="updateVisibleSections()">
+                  <option value="">Select</option>
+                  <script>
+                    for(let i = 1; i <= 15; i++) {
+                      document.write(`<option value="${i}">${i}</option>`);
+                    }
+                  </script>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <label class="label">Horizontal Wind Load (N)</label>
+            <div class="control">
+              <input class="input" type="number" step="0.1" id="windLoad">
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <label class="label">X Offset (mm)</label>
+            <div class="control">
+              <input class="input" type="number" step="1" id="xOffset">
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <label class="label">Z Offset (mm)</label>
+            <div class="control">
+              <input class="input" type="number" step="1" id="zOffset">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-5">
+
+      <!-- Tube Parameters -->
+      <div id="tubeFields"></div>
+
+      <div class="field is-grouped mt-5">
+        <div class="control">
+          <button class="button is-link" onclick="updateTubeParams()">Update Parameters</button>
+        </div>
+        <div class="control">
+          <button class="button is-link is-light" onclick="resetForm()">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function createTubeForm() {
+        const container = document.getElementById('tubeFields');
+        
+        for(let i = 1; i <= 15; i++) {
+          const tubeDiv = document.createElement('div');
+          tubeDiv.className = 'mb-5 tube-section';
+          tubeDiv.id = `tubeSection${i}`;
+          tubeDiv.style.display = 'none'; // Hide initially
+          
+          tubeDiv.innerHTML = `
+            <h3 class="title is-4">Tube ${i}</h3>
+            
+            <div class="columns">
+              <div class="column">
+                <div class="field">
+                  <label class="label">OD (mm)</label>
+                  <div class="control">
+                    <input class="input" type="number" step="0.1" id="od${i}">
+                  </div>
+                </div>
+              </div>
+              <div class="column">
+                <div class="field">
+                  <label class="label">Thickness (mm)</label>
+                  <div class="control">
+                    <input class="input" type="number" step="0.1" id="thickness${i}">
+                  </div>
+                </div>
+              </div>
+              <div class="column">
+                <div class="field">
+                  <label class="label">Overlap (mm)</label>
+                  <div class="control">
+                    <input class="input" type="number" step="1" id="overlap${i}">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="columns">
+              <div class="column">
+                <div class="field">
+                  <label class="label">Length (mm)</label>
+                  <div class="control">
+                    <input class="input" type="number" step="1" id="length${i}">
+                  </div>
+                </div>
+              </div>
+              <div class="column">
+                <div class="field">
+                  <label class="label">Head Length (mm)</label>
+                  <div class="control">
+                    <input class="input" type="number" step="1" id="headLength${i}">
+                  </div>
+                </div>
+              </div>
+              <div class="column">
+                <div class="field">
+                  <label class="label">Material</label>
+                  <div class="control">
+                    <div class="select">
+                      <select id="material${i}">
+                        <option value="aluminum">Aluminum</option>
+                        <option value="steel">Steel</option>
+                        <option value="carbon">Carbon Fiber</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="my-4">
+          `;
+          
+          container.appendChild(tubeDiv);
+        }
+      }
+
+      function updateVisibleSections() {
+        const numSections = parseInt(document.getElementById('numSections').value) || 0;
+        const tubeSections = document.getElementsByClassName('tube-section');
+        
+        // Show/hide sections based on selection
+        Array.from(tubeSections).forEach((section, index) => {
+          section.style.display = index < numSections ? 'block' : 'none';
+        });
+      }
+
+      // Call the function when the page loads
+      document.addEventListener('DOMContentLoaded', createTubeForm);
+
+      function resetForm() {
+        // Reset system parameters
+        document.getElementById('numSections').value = '';
+        document.getElementById('windLoad').value = '';
+        document.getElementById('xOffset').value = '';
+        document.getElementById('zOffset').value = '';
+
+        // Reset tube parameters
+        for(let i = 1; i <= 15; i++) {
+          document.getElementById(`od${i}`).value = '';
+          document.getElementById(`thickness${i}`).value = '';
+          document.getElementById(`length${i}`).value = '';
+          document.getElementById(`overlap${i}`).value = '';
+          document.getElementById(`headLength${i}`).value = '';
+          document.getElementById(`material${i}`).value = 'aluminum';
+        }
+        
+        // Hide all tube sections
+        updateVisibleSections();
+      }
+    </script>
+
+   
+
+
+
+
+
+  </section>
+
+
+    
+</body>
+</html>
