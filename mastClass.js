@@ -1,4 +1,5 @@
 class MastClass {
+
     constructor(data = false) {
 
         if (data) {
@@ -7,14 +8,13 @@ class MastClass {
             this.data = defaultData // from data.js
         }
 
-
         this.data.horAxisZData = [0]    // z, in mm
         this.data.verAxisMomentData = []
         this.data.verAxisDeflectionData = [0]
         this.data.verAxisDeflectionData2 = [0]
 
-
-
+        this.data.meiHorAxisZData = []
+        this.data.verAxisMeiData = []
     }
 
 
@@ -22,7 +22,7 @@ class MastClass {
 
         let totalMass = 0;
 
-        // HEOGHTS AND Z COORDINATES
+        // HEIGHTS AND Z COORDINATES
         this.calculateHeights()
 
         // ROOT MOMENT
@@ -79,13 +79,15 @@ class MastClass {
 
         this.data.tubes.forEach((tube,index) => {
 
-            z = z-tube.overlap
-
             tube.zKink = z
+
+            if (index > 0) {
+                z = z-tube.overlap
+            }
+
             tube.zBottom = z;
 
             z = z+tube.length;
-
             tube.zTop = z;
 
             nestedHeight += tube.headExtension
@@ -227,7 +229,18 @@ class MastClass {
             this.data.horAxisZData.push(tube.zTop)
             this.data.verAxisMomentData.push(tube.mTop)
             this.data.verAxisDeflectionData.push(tube.deflectionTop)
+
             this.data.verAxisDeflectionData2.push(tube.deflectionTop-200)
+
+
+            this.data.meiHorAxisZData.push(tube.zKink)
+            this.data.meiHorAxisZData.push(tube.zTop)
+
+            this.data.verAxisMeiData.push(tube.meiKink)
+            this.data.verAxisMeiData.push(tube.meiTop)
+
+
+
 
 
 
@@ -284,17 +297,32 @@ class MastClass {
         };
 
 
-        var TipDeflection2 = {
-            x: this.data.horAxisZData,
-            y: this.data.verAxisDeflectionData2,
-            yaxis:'y3',
+
+        var meiData = {
+            x: this.data.meiHorAxisZData,
+            y: this.data.verAxisMeiData,
             // fill: 'tozeroy',
+            yaxis:'y3',
             mode: 'lines+markers',
-            name: 'Deflection, mm',
-            line: {shape: 'spline'},
+            name: 'M/EI, 1/mm'
         };
 
-        var veri = [bendingMoment,TipDeflection,TipDeflection2];
+
+        console.log('MEI',meiData)
+
+
+
+        // var TipDeflection2 = {
+        //     x: this.data.horAxisZData,
+        //     y: this.data.verAxisDeflectionData2,
+        //     yaxis:'y3',
+        //     // fill: 'tozeroy',
+        //     mode: 'lines+markers',
+        //     name: 'Deflection, mm',
+        //     line: {shape: 'spline'},
+        // };
+
+        var veri = [bendingMoment,TipDeflection,meiData];
 
         var layout = {
 

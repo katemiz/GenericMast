@@ -104,7 +104,7 @@ class ChartClass {
         name: 'M/EI, 1/mm'
     };
 
-    console.log("MEI Data",mei_data)
+    console.log("MEI Data Charts Class",mei_data)
             
     var veri = [mei_data];
 
