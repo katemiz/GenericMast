@@ -283,9 +283,14 @@ class MastClass {
             y: this.data.verAxisMomentData,
             yaxis: 'y',
             mode: 'lines+markers',
+            line: {
+                color: 'rgb(58, 10, 109)', // Red color
+                width: 2, // Optional: set line width
+            },
             name: 'Moment, Nmm'
         };
-          
+
+
         var TipDeflection = {
             x: this.data.horAxisZData,
             y: this.data.verAxisDeflectionData,
@@ -293,7 +298,11 @@ class MastClass {
             // fill: 'tozeroy',
             mode: 'lines+markers',
             name: 'Deflection, mm',
-            line: {shape: 'spline'},
+            line: {
+                shape: 'spline',
+                color: 'rgb(246, 176, 12)', // Red color
+                width: 2, // Optional: set line width
+            },
         };
 
 
@@ -304,6 +313,12 @@ class MastClass {
             // fill: 'tozeroy',
             yaxis:'y3',
             mode: 'lines+markers',
+            line: {
+                color: 'rgb(33, 133, 6)', // Red color
+                width: 2, // Optional: set line width
+            },
+
+
             name: 'M/EI, 1/mm'
         };
 
@@ -327,7 +342,7 @@ class MastClass {
         var layout = {
 
             title: {
-              text: 'Bending Moment and Deflection Graph'
+              text: 'Bending Moment, Deflection and M/EI Graph'
             },
           
             xaxis: {
@@ -338,17 +353,20 @@ class MastClass {
           
             yaxis: {
               title: {
-                text: 'Moment, Nmm'
+                text: 'Moment, Nmm',
+                font: {color: 'rgb(58, 10, 109)'}
+
               }
             },
     
             yaxis2: {
                 title: {
                   text: 'Deflection, mm',
-                  font: {color: 'rgb(18, 9, 110)'}
+                  standoff: 20, // Adjust this value
+                  font: {color: 'rgb(246, 176, 12)'}
                 },
             
-                tickfont: {color: 'rgb(248, 11, 11)'},
+                tickfont: {color: 'rgb(246, 176, 12)'},
                 overlaying: 'y',
                 side: 'right'
             },
@@ -356,16 +374,36 @@ class MastClass {
 
             yaxis3: {
                 title: {
-                  text: 'Deflection, mm',
-                  font: {color: 'rgb(139, 137, 165)'}
+                  text: 'M/EI, 1/mm',
+                  font: {color: 'rgb(33, 133, 6)'}
                 },
             
-                tickfont: {color: 'rgb(11, 19, 248)'},
+                tickfont: {color: 'rgb(33, 133, 6)'},
                 overlaying: 'y',
                 side: 'right'
             },
     
             showlegend: true,
+
+
+            legend: {
+                x: 0.3,
+                y: 1.15,
+                bgcolor: 'lightgray',
+                bordercolor: 'black',
+                borderwidth: 1,
+                font: { family: 'Times New Roman', size: 12 },
+                title: {
+                    // text: "Legend Title",
+                    side: "top"
+                },
+                orientation: "h"
+              },
+
+
+
+
+
         };
     
         Plotly.newPlot(TESTER, veri, layout);
