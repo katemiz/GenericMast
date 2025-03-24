@@ -399,11 +399,6 @@ class MastClass {
                 },
                 orientation: "h"
               },
-
-
-
-
-
         };
     
         Plotly.newPlot(TESTER, veri, layout);

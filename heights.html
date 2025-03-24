@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mast Structural Analysis</title>
+
+  <link rel="icon" type="image/x-icon" href="https://masttech.net/images/favicon.ico">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+
+
+  <script src="../heights.js"></script>
+
+
+</head>
+
+
+<body class="container has-background-white-ter">
+
+  <section class="section ">
+
+    <h1 class="title is-size-1 ">Number of Sections/Extended/Nested Heights</h1>
+
+
+
+
+
+    <div class="field">
+        <label class="label">Number of Sections</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="Number of Sections" id="n" value="6">
+        </div>
+    </div>
+
+
+    <div class="field">
+        <label class="label">Length of Sections</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="Tube Lengths" id="L" value="3000">
+        </div>
+    </div>
+
+
+    <div class="field">
+        <label class="label">Overlap Length</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="Overlap Length" id="ol" value="800">
+        </div>
+    </div>
+
+
+    <div class="field">
+        <label class="label">Head Distance</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="Head Distance" id="H" value="200">
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <nav class="level">
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Extended Height</p>
+            <p class="title" id="eh"></p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Nested Height</p>
+            <p class="title" id="nh"></p>
+          </div>
+        </div>
+
+      </nav>
+
+
+
+
+
+
+
+
+      <button class="button is-dark" onclick="Calculate()">Refresh</button>
+
+
+
+
+
+  </section>
+
+
+    
+</body>
+</html>
