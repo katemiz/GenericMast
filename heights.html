@@ -25,12 +25,10 @@
 
 
 
-
-
     <div class="field">
         <label class="label">Number of Sections</label>
         <div class="control">
-          <input class="input" type="text" placeholder="Number of Sections" id="n" value="6">
+          <input class="input" type="text" placeholder="Number of Sections" id="n" >
         </div>
     </div>
 
@@ -38,7 +36,7 @@
     <div class="field">
         <label class="label">Length of Sections</label>
         <div class="control">
-          <input class="input" type="text" placeholder="Tube Lengths" id="L" value="3000">
+          <input class="input" type="text" placeholder="Tube Lengths" id="L" >
         </div>
     </div>
 
@@ -46,7 +44,7 @@
     <div class="field">
         <label class="label">Overlap Length</label>
         <div class="control">
-          <input class="input" type="text" placeholder="Overlap Length" id="ol" value="800">
+          <input class="input" type="text" placeholder="Overlap Length" id="ol" >
         </div>
     </div>
 
@@ -54,7 +52,7 @@
     <div class="field">
         <label class="label">Head Distance</label>
         <div class="control">
-          <input class="input" type="text" placeholder="Head Distance" id="H" value="200">
+          <input class="input" type="text" placeholder="Head Distance" id="H" >
         </div>
     </div>
 
@@ -80,9 +78,10 @@
 
       </nav>
 
+      <button class="button is-dark" onclick="Calculate()">Refresh</button>
 
 
-      <div id="values">
+      <div id="values" class="is-hidden">
         
 
 
@@ -92,7 +91,6 @@
 
 
 
-      <button class="button is-dark" onclick="Calculate()">Refresh</button>
 
 
 

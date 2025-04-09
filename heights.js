@@ -1,6 +1,17 @@
 
 window.onload = function() {
 
+    let n = 6;
+    let H = 200;
+    let L = 3000;
+    let ol = 800;
+
+
+    document.getElementById('n').value = n;
+    document.getElementById('H').value = H;
+    document.getElementById('L').value = L;
+    document.getElementById('ol').value = ol;
+
 
 
     Calculate()
@@ -15,10 +26,10 @@ window.onload = function() {
 
 function Calculate() {
 
-    let n  = parseFloat(document.getElementById('n').value);
-    let H = parseFloat(document.getElementById('H').value);
-    let L = parseFloat(document.getElementById('L').value);
-    let ol = parseFloat(document.getElementById('ol').value);
+    n  = parseFloat(document.getElementById('n').value);
+    H = parseFloat(document.getElementById('H').value);
+    L = parseFloat(document.getElementById('L').value);
+    ol = parseFloat(document.getElementById('ol').value);
 
     console.log(n,H,L,ol)
 

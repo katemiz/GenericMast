@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mast Structural Analysis</title>
+
+  <link rel="icon" type="image/x-icon" href="https://masttech.net/images/favicon.ico">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+
+
+  <script src="../pneumaticLift.js"></script>
+
+
+</head>
+
+
+<body class="container has-background-white-ter">
+
+  <section class="section ">
+
+    <h1 class="title is-size-1 ">Pneumatic Lift Capacity Calculation</h1>
+
+
+    <div class="columns">
+
+        <div class="column is-half">
+
+            <figure class="image ">
+                <img src="./Pneumatic.png" />
+            </figure>
+
+        
+        </div>
+
+
+        <div class="column">
+
+            <div class="field">
+                <label class="label">d, Diameter of Tube End (mm)</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Number of Sections" id="dia" onchange="Calculate()">
+                </div>
+            </div>
+        
+        
+            <div class="field">
+                <label class="label">p<sub>i</sub>, Internal Pressure, (bar)</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Tube Lengths" id="pi" onchange="Calculate()">
+                </div>
+
+
+
+                <table class="table is-fullwidth my-6">
+                    <tr>
+                        <th>Pressure</th>
+                        <td class="has-text-right" id="pi_mpa"></td>
+                        <th>MPa</th>
+                    </tr>
+                    <tr>
+                        <th>Pressure</th>
+                        <td class="has-text-right"  id="pi_psi"></td>
+                        <th>psi</th>
+                    </tr>
+
+
+                    <tr>
+                        <th>Area</th>
+                        <td class="has-text-right"  id="a"></td>
+                        <th>mm<sup>2</sup></th>
+                    </tr>
+                </table>
+
+
+                <nav class="level mt-6">
+
+                    <div class="level-item has-text-centered">
+                      <div>
+                        <p class="heading">Total Force, F (N/kg)</p>
+                        <p class="title" id="fN"></p>
+                      </div>
+                    </div>
+
+            
+                </nav>
+
+
+
+            </div>
+
+        
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+  </section>
+
+
+    
+</body>
+</html>
