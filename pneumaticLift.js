@@ -7,7 +7,9 @@ window.onload = function() {
     document.getElementById('dia').value = d;
     document.getElementById('pi').value = pi;
 
-    Calculate()
+    Calculate();
+
+    CalculateTubeDims();
 }
 
 
@@ -52,3 +54,49 @@ function Calculate() {
 }
 
 
+
+
+
+
+function CalculateTubeDims() {
+
+    console.log('*****************')
+
+    let allowable = 200; // MPa
+    
+    const deltaMoment = 500; // Nm
+    
+    let outerDia = 48; // mm
+    
+    let c,innerDia,thickness
+
+
+    let mci = deltaMoment*32000*outerDia/(allowable*Math.PI)
+
+    innerDia = Math.pow(Math.pow(outerDia,4)-mci,0.25)
+
+
+
+
+
+    thickness = (outerDia-innerDia)/2
+
+    console.log('thickness',thickness.toFixed(1))
+    
+    for (let index = 1; index < 18; index++) {
+    
+        c = outerDia/2;
+    
+        innerDia = Math.pow(Math.pow(outerDia,4)-index*deltaMoment*1000*c/allowable*64/Math.PI,0.25)
+
+        //console.log('innerDia',innerDia)
+        
+        thickness = (outerDia-innerDia)/2
+
+        console.log("Boru , OD, ID, thk",index, outerDia.toFixed(1),innerDia.toFixed(1),thickness.toFixed(1))
+
+        
+        outerDia = outerDia+14;
+    
+    }
+}
