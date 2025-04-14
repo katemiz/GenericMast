@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mast Structural Analysis</title>
+
+  <link rel="icon" type="image/x-icon" href="https://masttech.net/images/favicon.ico">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+
+
+  <script src="../mtTubes.js"></script>
+
+
+  <script>
+
+
+    function toggleModal(modalId) {
+
+        modalId = 'modal'+modalId;
+        const modal = document.getElementById(modalId);;
+        modal.classList.toggle('is-active');
+    }
+
+  </script>
+
+
+
+</head>
+
+
+<body class="container has-background-white-ter">
+
+
+
+  <section class="section ">
+
+    <a class="button is-link" href="./menu.html">Menu</a>
+
+
+    <h1 class="title is-size-1 ">Masttech Tube Profiles </h1>
+    <h1 class="subtitle is-size-41 ">All Rights Reserved &copy; 2025</h1>
+
+
+
+
+
+
+
+
+
+
+        <table class="table is-fullwidth my-6">
+
+
+            <thead>
+                <th class="has-text-left font-bold">#</th>
+                <th class="has-text-right">OD</th>
+                <th class="has-text-right">ID</th>
+                <th class="has-text-right">THK</th>
+                <th class="has-text-right">Mass</th>
+                <th class="has-text-right">Moment<br>Capacity</th>
+                <th class="has-text-right" colspan="2">Pneumatic<br>Load Capacity<br>[For 2 Bars Pressure]</th>
+                <th class="has-text-right">Critical Load<br>
+                    <button class="button" onclick="toggleModal(1)">?</button>
+                </th>
+
+
+
+            </thead>
+
+
+            <tbody id="tableBody">
+
+            </tbody>    
+
+        </table>
+
+
+
+
+
+
+
+
+        <div class="modal" id="modal1">
+            <div class="modal-background" onclick="toggleModal(1)"></div>
+            <div class="modal-content notification is-info is-light" id="m1"></div>
+
+
+
+
+
+            <button class="modal-close is-large" aria-label="close" onclick="toggleModal(1)"></button>
+        </div>
+
+
+
+
+
+
+  </section>
+
+
+    
+</body>
+</html>
